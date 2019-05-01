@@ -1,5 +1,6 @@
 
 // #region Ways to Build an Adjacency List
+
 // Function method
 function BuildAdjacencyList(nodes,edges)
 {
@@ -18,51 +19,27 @@ function BuildAdjacencyList(nodes,edges)
 
 // Object Oriented method
 var AdjacencyList = function(nodes, edges, isDirected) {
-
     if (nodes instanceof Array) {
-
         for(let n of nodes) {
-
             this[n] = [];
-
-            for(let [u,v] of edges)
-
-            {
-
+            for(let [u,v] of edges) {
                 if (u===n) this[n].push(v);
-
                 else if (!isDirected && v===n) this[n].push(u);
-
             }
-
         }
-
     }
-
     else {
-
         //Assume nodes is a number
-
         for(let i=1;i<=nodes;i++)
-
         {
-
             this[i] = [];
-
             for(let [u,v] of edges)
-
             {
-
                 if (u===i) this[i].push(v);
-
                 else if (!isDirected && v===i) this[i].push(u);
-
             }
-
         }
-
     }
-
 }
 // #endregion
 
