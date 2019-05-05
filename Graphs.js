@@ -124,7 +124,6 @@ Object.freeze(Graph.prototype.vertexColor);
 /**
  * @summary implementation from MIT OCW Course 
  * @param {*} s starting vertex
- * @param {*} g Graph
  */
 Graph.prototype.bfs_mit = function(s) {
     
@@ -180,13 +179,10 @@ Graph.prototype.bfs_mit = function(s) {
     return {distance: level,parent};
 };
 
-
-
 /**
  * @summary
  * @description
  * @param {*} s 
- * @param {*} g 
  */
 Graph.prototype.bfs_textbook = function(s) {
     let me = this;
@@ -229,10 +225,116 @@ Graph.prototype.bfs_textbook = function(s) {
     return {distance,parent};
 }
 
+Graph.prototype.dfs_flex = function(SV) {
+    //white=reached,gray=visiting,black=visited
+    let color = {};
+    let discoveryTime = {};
+    let parents = {}
+    let finishTime = {};
+    let tm = 0;
+    let me = this;
+    let al = me.adjacencyList();
+    let V = me.vertices;
+    let vc = me.vertexColor;
+
+    // define the recursed operations
+    function dfs_visit(u) {
+        color[u] = vc.GRAY;
+        tm++;
+        discoveryTime[u]=tm;
+        for(let v of al[u]) {
+            if (color[v]===vc.WHITE) {
+                parents[v]=u;
+                dfs_visit(v);
+            }
+        }
+        color[u]=vc.BLACK;
+        tm++;
+        finishTime[u]=tm;
+    };
+
+    // before graph exploration begins
+    // mark all vertices as not yet explored
+    for(let n of V) {
+        color[n]=vc.WHITE;
+        discoveryTime[n]=undefined;
+        finishTime[n]=undefined;
+        parents[n]=null;
+    }
+
+    // explore graph
+    for(let n of SV) {
+        if(color[n]===vc.WHITE) {
+            dfs_visit(n);
+        }
+    }
+
+    // if parents[u]=null, that means in this iteration
+    // of dfs that vertex doesn't have a parent
+    return {discoveryTime,finishTime,parents};
+};
+
+Graph.prototype.dfs_textbook = function() {
+    return this.dfs_flex(this.vertices);
+}
+
+Graph.prototype.dfs_from = function(s) {
+    return this.dfs_flex([s]);
+}
+
+// Graph.prototype.dfs_textbook = function() {
+//     //white=reached,gray=visiting,black=visited
+//     let color = {};
+//     let discoveryTime = {};
+//     let parents = {}
+//     let finishTime = {};
+//     let tm = 0;
+//     let me = this;
+//     let al = me.adjacencyList();
+//     let V = me.vertices;
+//     let vc = me.vertexColor;
+
+//     // define the recursed operations
+//     function dfs_visit(u) {
+//         color[u] = vc.GRAY;
+//         tm++;
+//         discoveryTime[u]=tm;
+//         for(let v of al[u]) {
+//             if (color[v]===vc.WHITE) {
+//                 parents[v]=u;
+//                 dfs_visit(v);
+//             }
+//         }
+//         color[u]=vc.BLACK;
+//         tm++;
+//         finishTime[u]=tm;
+//     };
+
+//     // before graph exploration begins
+//     // mark all vertices as not yet explored
+//     for(let n of V) {
+//         color[n]=vc.WHITE;
+//         discoveryTime[n]=undefined;
+//         finishTime[n]=undefined;
+//         parents[n]=null;
+//     }
+
+//     // explore graph
+//     for(let n of V) {
+//         if(color[n]===vc.WHITE) {
+//             dfs_visit(n);
+//         }
+//     }
+
+//     // if parents[u]=null, that means in this iteration
+//     // of dfs that vertex doesn't have a parent
+//     return {discoveryTime,finishTime,parents};
+// };
+
 //var WeightedGraph = function() {};
 
 var g1 = new Graph(
-	['v','s','w','q','t','x','z','y','r','u'],
+	['y','s','w','q','t','x','z','v','r','u'],
 	[
 		['s','v']
 		,['v','w']
@@ -260,13 +362,12 @@ var g2 = new Graph(
 
 for(let g of [g1,g2]) {
     console.log('\n----------------------------');
-    console.log(g);
-    console.log(g.bfs_mit(g.vertices[0]));
-    console.log(g.bfs_textbook(g.vertices[0]));
+    console.log(g.dfs_from(g.vertices[0]));
+    console.log(g.dfs_textbook());
     console.log('----------------------------\n');
 }
 
-console.log(Graph.prototype);
+//console.log(Graph.prototype);
 
 //console.log(Graph.prototype.constructor);
 //console.log(g1.adjacencyList===g2.adjacencyList);
