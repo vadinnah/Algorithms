@@ -180,11 +180,11 @@ Graph.prototype.bfs_mit = function(s) {
 };
 
 /**
- * @summary
+ * @summary Implementation of bfs according to textbook
  * @description
  * @param {*} s 
  */
-Graph.prototype.bfs_textbook = function(s) {
+Graph.prototype.bfs = function(s) {
     let me = this;
     //white=reached,gray=visiting,black=visited
     let color = {};
@@ -274,62 +274,16 @@ Graph.prototype.dfs_flex = function(SV) {
     return {discoveryTime,finishTime,parents};
 };
 
-Graph.prototype.dfs_textbook = function() {
+/**
+ * @summary Implementation of dfs according to textbook
+ */
+Graph.prototype.dfs = function() {
     return this.dfs_flex(this.vertices);
 }
 
-Graph.prototype.dfs_from = function(s) {
+Graph.prototype.dfsAtRoot = function(s) {
     return this.dfs_flex([s]);
 }
-
-// Graph.prototype.dfs_textbook = function() {
-//     //white=reached,gray=visiting,black=visited
-//     let color = {};
-//     let discoveryTime = {};
-//     let parents = {}
-//     let finishTime = {};
-//     let tm = 0;
-//     let me = this;
-//     let al = me.adjacencyList();
-//     let V = me.vertices;
-//     let vc = me.vertexColor;
-
-//     // define the recursed operations
-//     function dfs_visit(u) {
-//         color[u] = vc.GRAY;
-//         tm++;
-//         discoveryTime[u]=tm;
-//         for(let v of al[u]) {
-//             if (color[v]===vc.WHITE) {
-//                 parents[v]=u;
-//                 dfs_visit(v);
-//             }
-//         }
-//         color[u]=vc.BLACK;
-//         tm++;
-//         finishTime[u]=tm;
-//     };
-
-//     // before graph exploration begins
-//     // mark all vertices as not yet explored
-//     for(let n of V) {
-//         color[n]=vc.WHITE;
-//         discoveryTime[n]=undefined;
-//         finishTime[n]=undefined;
-//         parents[n]=null;
-//     }
-
-//     // explore graph
-//     for(let n of V) {
-//         if(color[n]===vc.WHITE) {
-//             dfs_visit(n);
-//         }
-//     }
-
-//     // if parents[u]=null, that means in this iteration
-//     // of dfs that vertex doesn't have a parent
-//     return {discoveryTime,finishTime,parents};
-// };
 
 //var WeightedGraph = function() {};
 
@@ -362,8 +316,8 @@ var g2 = new Graph(
 
 for(let g of [g1,g2]) {
     console.log('\n----------------------------');
-    console.log(g.dfs_from(g.vertices[0]));
-    console.log(g.dfs_textbook());
+    console.log(g.dfsAtRoot(g.vertices[0]));
+    console.log(g.dfs());
     console.log('----------------------------\n');
 }
 
