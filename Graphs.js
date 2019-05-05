@@ -255,43 +255,8 @@ Graph.prototype.dfsAtRoot = function(s) {
 
 //var WeightedGraph = function() {};
 
-var g1 = new Graph(
-	['y','s','w','q','t','x','z','v','r','u'],
-	[
-		['s','v']
-		,['v','w']
-		,['w','s']
-		,['q','s']
-		,['q','w']
-		,['q','t']
-		,['t','x']
-		,['x','z']
-		,['z','x']
-		,['t','y']
-		,['y','q']
-		,['u','y']
-		,['r','u']
-		,['r','y']
-	],
-	true
-);
-
-var g2 = new Graph(
-	6
-	,[[1,2],[1,5],[5,2],[4,5],[2,4],[2,3],[3,4]]
-	//,true
-);
-
-for(let g of [g1,g2]) {
-    console.log('\n----------------------------');
-    console.log(g.dfsAtRoot(g.vertices[0]));
-    console.log(g.dfs());
-    console.log('----------------------------\n');
-}
-
-//console.log(Graph.prototype);
-
-//console.log(Graph.prototype.constructor);
-//console.log(g1.adjacencyList===g2.adjacencyList);
-// console.log(g1.adjacencyList());
-//console.log(g1);
+module.exports = {
+    AdjacencyList,
+    AdjacencyMatrix,
+    Graph
+};
