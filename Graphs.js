@@ -73,35 +73,11 @@ var Graph = function(V,E,isDirected) {
 }; 
 
 Graph.prototype.adjacencyList = function() {
-    let me = this;
-    let al = {};
-    for(let n of me.vertices) {
-        al[n] = [];
-        for(let [u,v] of me.edges)
-        {
-            if (u===n) al[n].push(v);
-            else if (!me.isDirected && v===n) al[n].push(u);
-        }
-    }
-
-    return al;
+    return new AdjacencyList(this.vertices,this.edges, this.isDirected);
 }
 
 Graph.prototype.adjacencyMatrix = function() {
-    let me = this;
-    let am = {};
-    for(let n of me.vertices) {
-        am[n] = {};
-        for(let m of me.vertices) {
-            am[n][m] = 0;
-        }
-    }
-
-    for(let [u,v] of me.edges) {
-        am[u][v] = 1;
-        if (!me.isDirected) am[v][u] = 1; 
-    }
-    return am;
+    return new AdjacencyMatrix(this.vertices,this.edges, this.isDirected);
 };
 
 /**
