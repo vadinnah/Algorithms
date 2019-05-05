@@ -161,7 +161,6 @@ var Graph = function(V,E,isDirected) {
 	
 } 
 */
-// #endregion
 
 
 var Graph = function(V,E,isDirected) {
@@ -374,7 +373,7 @@ var Graph = function(V,E,isDirected) {
 		return {discoveryTime,finishTime,parents};
 	};
 } 
-
+// #endregion
 
 var g1 = new Graph(
 	['v','s','w','q','t','x','z','y','r','u'],
