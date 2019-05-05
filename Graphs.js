@@ -52,117 +52,6 @@ var AdjacencyMatrix = function(nodes, edges, isDirected) {
 	}
 }
 
-// #endregion
-
-// #region Graph attempt 1
-/*
-var Graph = function(V,E,isDirected) {
-	var me = this;
-	this.vertices = V;
-	this.edges = E;
-	this.isDirected = isDirected;
-
-	// this.adjacencyList = function(nodes, edges, isDirected) {
-	// 	if (nodes instanceof Array) {
-	// 		for(let n of nodes) {
-	// 			this[n] = [];
-	// 			for(let [u,v] of edges)
-	// 			{
-	// 				if (u===n) this[n].push(v);
-	// 				else if (!isDirected && v===n) this[n].push(u);
-	// 			}
-	// 		}
-	// 	}
-	// 	else {
-	// 		//Assume nodes is a number
-	// 		for(let i=1;i<=nodes;i++)
-	// 		{
-	// 			this[i] = [];
-	// 			for(let [u,v] of edges)
-	// 			{
-	// 				if (u===i) this[i].push(v);
-	// 				else if (!isDirected && v===i) this[i].push(u);
-	// 			}
-	// 		}
-	// 	}
-	// 	return this;
-	// }(V,E,isDirected);
-
-	// this.adjacencyMatrix = function(nodes, edges, isDirected) {
-	// 	for(let n in nodes) {
-	// 		this[n] = {};
-	// 		for(let m in nodes) {
-	// 			this[n][m] = 0;
-	// 		}
-	// 	}
-
-	// 	for(let [u,v] of edges) {
-	// 		this[u][v] = 1;
-	// 		if (!isDirected) this[v][u] = 1; 
-	// 	}
-	// 	return this;
-	// }(V,E,isDirected);
-
-	this.adjacencyList = function(nodes, edges, isDirected) {
-		let al = {};
-		if (nodes instanceof Array) {
-			for(let n of nodes) {
-				al[n] = [];
-				for(let [u,v] of edges)
-				{
-					if (u===n) al[n].push(v);
-					else if (!isDirected && v===n) al[n].push(u);
-				}
-			}
-		}
-		else {
-			//Assume nodes is a number
-			for(let i=1;i<=nodes;i++)
-			{
-				al[i] = [];
-				for(let [u,v] of edges)
-				{
-					if (u===i) al[i].push(v);
-					else if (!isDirected && v===i) al[i].push(u);
-				}
-			}
-		}
-		return al;
-	}(V,E,isDirected);
-
-	this.adjacencyMatrix = function(nodes, edges, isDirected) {
-		let am = {};
-		if (nodes instanceof Array) {
-			for(let n of nodes) {
-				am[n] = {};
-				for(let m of nodes) {
-					am[n][m] = 0;
-				}
-			}
-		}
-		else {
-			//Assume nodes is a number
-			indices = new Array(nodes);	
-			for(let i=1;i<=nodes;i++)
-			{
-				am[i] = {};
-				for(let j=1;i<=nodes;j++) {
-					am[i][j] = 0;
-				}
-			}
-		}
-
-		for(let [u,v] of edges) {
-			am[u][v] = 1;
-			if (!isDirected) am[v][u] = 1; 
-		}
-		return am;
-	}(V,E,isDirected);
-	
-} 
-*/
-
-
 var Graph = function(V,E,isDirected) {
 	var me = this;
 	this.vertices = function(nodes){
@@ -181,8 +70,6 @@ var Graph = function(V,E,isDirected) {
 	}(V);
 	this.edges = E;
 	this.isDirected = isDirected;
-
-
 
 	this.adjacencyList = function() {
 		let al = {};
