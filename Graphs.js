@@ -52,7 +52,7 @@ var AdjacencyMatrix = function(nodes, edges, isDirected) {
 	}
 }
 
-var Graph = function(V,E,isDirected) {
+var Graph = function(V,E,isDirected=false) {
 	var me = this;
 	this.vertices = function(nodes){
 		if (nodes instanceof Array) {
