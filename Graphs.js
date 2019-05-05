@@ -89,6 +89,14 @@ Graph.prototype.vertexColor =  {
 };
 Object.freeze(Graph.prototype.vertexColor);
 
+Graph.prototype.edgeClassifications = function()
+{
+    this.back = [];
+    this.leaf = [];
+    this.forward = [];
+    this.cross = [];
+}
+
 /**
  * @summary implementation from MIT OCW Course 
  * @param {*} s starting vertex
@@ -193,7 +201,7 @@ Graph.prototype.bfs = function(s) {
     return {distance,parent};
 }
 
-Graph.prototype.dfs_flex = function(SV) {
+Graph.prototype.dfs_explore = function(SV) {
     //white=reached,gray=visiting,black=visited
     let color = {};
     let discoveryTime = {};
@@ -203,7 +211,10 @@ Graph.prototype.dfs_flex = function(SV) {
     let me = this;
     let al = me.adjacencyList();
     let V = me.vertices;
+    let E = me.edges;
     let vc = me.vertexColor;
+    let topologicalSort = [];
+    let ec = new me.edgeClassifications();
 
     // define the recursed operations
     function dfs_visit(u) {
@@ -214,11 +225,16 @@ Graph.prototype.dfs_flex = function(SV) {
             if (color[v]===vc.WHITE) {
                 parents[v]=u;
                 dfs_visit(v);
+                ec.leaf.push([u,v]);
+            }
+            else if(color[v]===vc.GRAY) {
+                ec.back.push([u,v]);
             }
         }
         color[u]=vc.BLACK;
         tm++;
         finishTime[u]=tm;
+        topologicalSort.push(u);
     };
 
     // before graph exploration begins
@@ -237,21 +253,48 @@ Graph.prototype.dfs_flex = function(SV) {
         }
     }
 
+    for(let [u,v] in E) {
+        if(ec.leaf.includes([u,v])===false && ec.back.includes([u,v])===false) {
+            if(discoveryTime[u]<discoveryTime[v]) {
+                ec.forward.push([u,v]);
+            }
+            else {
+                ec.cross.push([u,v]);
+            }
+        }
+    }
+
     // if parents[u]=null, that means in this iteration
     // of dfs that vertex doesn't have a parent
-    return {discoveryTime,finishTime,parents};
+    return {discoveryTime,finishTime,parents,topologicalSort,edgeClasses:ec};
 };
 
 /**
  * @summary Implementation of dfs according to textbook
  */
 Graph.prototype.dfs = function() {
-    return this.dfs_flex(this.vertices);
+    return this.dfs_explore(this.vertices);
 }
 
 Graph.prototype.dfsAtRoot = function(s) {
-    return this.dfs_flex([s]);
+    return this.dfs_explore([s]);
 }
+
+Graph.prototype.isAcyclic = function(s) {
+    // true if no cycles detected
+    // there are no cycles if there are no back edges
+}
+
+// Graph.prototype.topological_sort = function() {
+//     let {finishTime:f} = me.dfs();
+//     let a = [];
+//     for(let v in me.vertices) {
+//         a.push([f[v],v]);
+//     }
+//     a.sort();
+//     let res = a.map(v=>v[1]);
+//     return res;
+// }
 
 //var WeightedGraph = function() {};
 
