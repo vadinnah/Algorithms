@@ -207,39 +207,37 @@ Graph.prototype.dfs_explore = function(SV) {
     let discoveryTime = {};
     let parents = {}
     let finishTime = {};
-    let tm = 0;
+    let timer = 0;
     let me = this;
     let al = me.adjacencyList();
-    let V = me.vertices;
-    let E = me.edges;
     let vc = me.vertexColor;
     let topologicalSort = [];
-    let ec = new me.edgeClassifications();
+    let edgeClasses = new me.edgeClassifications();
 
     // define the recursed operations
     function dfs_visit(u) {
         color[u] = vc.GRAY;
-        tm++;
-        discoveryTime[u]=tm;
+        timer++;
+        discoveryTime[u]=timer;
         for(let v of al[u]) {
             if (color[v]===vc.WHITE) {
                 parents[v]=u;
                 dfs_visit(v);
-                ec.leaf.push([u,v]);
+                edgeClasses.leaf.push([u,v]);
             }
             else if(color[v]===vc.GRAY) {
-                ec.back.push([u,v]);
+                edgeClasses.back.push([u,v]);
             }
         }
         color[u]=vc.BLACK;
-        tm++;
-        finishTime[u]=tm;
+        timer++;
+        finishTime[u]=timer;
         topologicalSort.push(u);
     };
 
     // before graph exploration begins
     // mark all vertices as not yet explored
-    for(let n of V) {
+    for(let n of me.vertices) {
         color[n]=vc.WHITE;
         discoveryTime[n]=undefined;
         finishTime[n]=undefined;
@@ -253,20 +251,20 @@ Graph.prototype.dfs_explore = function(SV) {
         }
     }
 
-    for(let [u,v] in E) {
-        if(ec.leaf.includes([u,v])===false && ec.back.includes([u,v])===false) {
+    for(let [u,v] in me.edges) {
+        if(edgeClasses.leaf.includes([u,v])===false && edgeClasses.back.includes([u,v])===false) {
             if(discoveryTime[u]<discoveryTime[v]) {
-                ec.forward.push([u,v]);
+                edgeClasses.forward.push([u,v]);
             }
             else {
-                ec.cross.push([u,v]);
+                edgeClasses.cross.push([u,v]);
             }
         }
     }
 
     // if parents[u]=null, that means in this iteration
     // of dfs that vertex doesn't have a parent
-    return {discoveryTime,finishTime,parents,topologicalSort,edgeClasses:ec};
+    return {discoveryTime,finishTime,parents,topologicalSort,edgeClasses};
 };
 
 /**
