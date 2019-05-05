@@ -70,197 +70,107 @@ var Graph = function(V,E,isDirected) {
 	}(V);
 	this.edges = E;
 	this.isDirected = isDirected;
+}; 
 
-	this.adjacencyList = function() {
-		let al = {};
-		for(let n of me.vertices) {
-			al[n] = [];
-			for(let [u,v] of me.edges)
-			{
-				if (u===n) al[n].push(v);
-				else if (!me.isDirected && v===n) al[n].push(u);
-			}
-		}
+Graph.prototype.adjacencyList = function() {
+    let me = this;
+    let al = {};
+    for(let n of me.vertices) {
+        al[n] = [];
+        for(let [u,v] of me.edges)
+        {
+            if (u===n) al[n].push(v);
+            else if (!me.isDirected && v===n) al[n].push(u);
+        }
+    }
 
-		return al;
-	}();
+    return al;
+}
 
-	this.adjacencyMatrix = function() {
-		let am = {};
-		for(let n of me.vertices) {
-			am[n] = {};
-			for(let m of me.vertices) {
-				am[n][m] = 0;
-			}
-		}
+Graph.prototype.adjacencyMatrix = function() {
+    let me = this;
+    let am = {};
+    for(let n of me.vertices) {
+        am[n] = {};
+        for(let m of me.vertices) {
+            am[n][m] = 0;
+        }
+    }
 
-		for(let [u,v] of me.edges) {
-			am[u][v] = 1;
-			if (!me.isDirected) am[v][u] = 1; 
-		}
-		return am;
-	}();
-	
-	this.bfs = function(s) {
-		// Track distance of each node from start
-		let al = this.adjacencyList;
-		let levels = {};
-		levels[s]=0;
-		// Track the parent of each node from start
-		let parents = {};
-		parents[s]=null;
-		// Track the nodes we have visited
-		let frontier = [s];
-		// Track the current level
-		let i = 1;
-		while(frontier && frontier.length>0) {
-			// Track those nodes that will become a part of the next frontier
-			let next = [];
-			// Explore the nodes in the curent frontier
-			for(let u of frontier) {
-				for(let v of al[u]) {
-					if(levels[v]===undefined || levels[v]===null)
-					{
-						// set the current level of the newly reached node
-						levels[v]=i;
-						// set the parents of the newly reach node
-						parents[v]=u;
-						// mark newly reach node as a new frontier
-						next.push(v);
-					}
-				}
-			}
-			// Now that we have explored every node in the current
-			// frontier, time to traverse the nodes in the next frontier
-			frontier = next;
-			// Mark the level (distance from start) of the new frontier
-			i++;
-		}
-		return {levels,parents};
-	};
+    for(let [u,v] of me.edges) {
+        am[u][v] = 1;
+        if (!me.isDirected) am[v][u] = 1; 
+    }
+    return am;
+};
 
-	this.shortestPath = function(s,v) {
-		// if(s===v) return [];
-		// let {parents,levels} = this.bfs(s);
-		// let sp = [];
-		// if(parents.hasOwnProperty(v)) {
-		// 	let n = v;
-		// 	while(parents.hasOwnProperty(n) && n!==s) {
-		// 		let p = parents[n];
-		// 		sp.push(n);
-		// 		n = p;
-		// 	}
-		// }
-		
-		if(s===v) return [];
-		let {parents} = this.bfs(s);
-		let n = v;
-		let sp = [];
-		while(n && parents.hasOwnProperty(n)) {
-			sp.push(n);
-			n = parents[n];
-		}
-		return sp.reverse();
-	};
+/**
+ * @summary implementation from MIT OCW Course 
+ * @param {*} s starting vertex
+ * @param {*} g Graph
+ */
+Graph.prototype.bfs_mit = function(s) {
+    // Track distance of each node from start
+    let al = this.adjacencyList();
+    let levels = {};
+    levels[s]=0;
+    // Track the parent of each node from start
+    let parents = {};
+    parents[s]=null;
+    // Track the nodes we have visited
+    let frontier = [s];
+    // Track the current level
+    let i = 1;
+    while(frontier && frontier.length>0) {
+        // Track those nodes that will become a part of the next frontier
+        let next = [];
+        // Explore the nodes in the curent frontier
+        for(let u of frontier) {
+            for(let v of al[u]) {
+                if(levels[v]===undefined || levels[v]===null)
+                {
+                    // set the current level of the newly reached node
+                    levels[v]=i;
+                    // set the parents of the newly reach node
+                    parents[v]=u;
+                    // mark newly reach node as a new frontier
+                    next.push(v);
+                }
+            }
+        }
+        // Now that we have explored every node in the current
+        // frontier, time to traverse the nodes in the next frontier
+        frontier = next;
+        // Mark the level (distance from start) of the new frontier
+        i++;
+    }
+    return {levels,parents};
+};
 
-	// this.dfs = function() {
-	// 	let parents = {};
-	// 	let al = me.adjacencyList;
-	// 	function dfs_visit(al,s) {
-	// 		for(let v of al[s])
-	// 		{
-	// 			if(!parents.hasOwnProperty(v))
-	// 			{
-	// 				parents[v]=s;
-	// 				dfs_visit(al,v);
-	// 			}
-	// 		}
-	// 	};
+/**
+ * @summary
+ * @description
+ * @param {*} s 
+ * @param {*} g 
+ */
+Graph.prototype.bfs_textbook = function(s) {
+    let me = this;
+    //white=reached,gray=visiting,black=visited
+    let color = {};
+    let distance = {};
+    let parent = {};
+    let queue = [];
 
-	// 	for(let s of vertices)
-	// 	{
-	// 		if(!parents.hasOwnProperty(s)) {
-	// 			parents[s]=null;
-	// 			dfs_visit.call(this,al,s);
-	// 		}
-	// 	}
-	// 	return parents;
-	// };
+    let V = me.vertices;
+    let al = me.adjacencyList;
 
-	// this.dfs_detect_edges = function() {
-	// 	let parents = {};
-	// 	let timestamps = {};
-	// 	let timeCounter = 0;
-	// 	let recurseStack = {};
-	// 	let al = me.adjacencyList;
-	// 	//let currlead = undefined;
-	// 	function dfs_visit(al,s) {		
-	// 		let stamp = {};
-	// 		stamp.start = ++timeCounter;
-	// 		//recurseStack[s] = currlead;
-	// 		for(let v of al[s])
-	// 		{			
-	// 			if(!parents.hasOwnProperty(v))
-	// 			{
-	// 				parents[v]=s;
-	// 				dfs_visit(al,v);
-	// 			}			
-	// 		}
-	// 		stamp.end = ++timeCounter;
-	// 		timestamps[s]=stamp;
-	// 	}
-	
-	// 	function setLastLead() {
-	
-	// 	}
-	
-	// 	for(let s of me.vertices)
-	// 	{
-	// 		if(!parents.hasOwnProperty(s)) {
-	// 			parents[s]=null;
-	// 			dfs_visit(al,s);
-	// 		}
-	// 	}
-	// 	return {parents,timestamps};
-	// };
-	
-	
-	this.dfs = function() {
-		//white=reached,gray=visiting,black=visited
-		let color = {};
-		let discoveryTime = {};
-		let parents = {}
-		let finishTime = {};
-		let tm = 0;
-		function dfs_visit(u) {
-			color[u] = 'gray';
-			tm++;
-			discoveryTime[u]=tm;
-			for(let v of me.adjacencyList[u]) {
-				if (color[v]==='white') {
-					parents[v]=u;
-					dfs_visit(v);
-				}
-			}
-			color[u]='black';
-			tm++;
-			finishTime[u]=tm;
-		};
+    for(let u of V) {
+        if(u!==s) {
+            color[u]='white';
 
-		for(let n of me.vertices) {
-			color[n]='white';
-		}
-
-		for(let n of me.vertices) {
-			if(color[n]==='white') {
-				dfs_visit(n);
-			}
-		}
-
-		return {discoveryTime,finishTime,parents};
-	};
-} 
-// #endregion
+        }
+    }
+}
 
 var g1 = new Graph(
 	['v','s','w','q','t','x','z','y','r','u'],
@@ -283,13 +193,19 @@ var g1 = new Graph(
 	true
 );
 
-//console.log(g1.adjacencyList);
-console.log(g1.dfs());
+var g2 = new Graph(
+	6
+	,[[1,2],[1,5],[5,2],[4,5],[2,4],[2,3],[3,4]]
+	//,true
+);
 
-// var g2 = new Graph(
-// 	6
-// 	,[[1,2],[1,5],[5,2],[4,5],[2,4],[2,3],[3,4]]
-// 	//,true
-// );
-// console.log('\n\n');
-// console.log(g2);
+for(let g of [g1,g2]) {
+    console.log('\n----------------------------');
+    console.log(g);
+    console.log(g.adjacencyList());
+    console.log(g.adjacencyMatrix());
+    console.log('----------------------------\n');
+}
+
+// console.log(g1.adjacencyList());
+//console.log(g1);
