@@ -138,12 +138,14 @@ Graph.prototype.bfs_mit = function(s) {
     // Track the nodes we have visited
     let frontier = [];
 
-    //Handle those vertices not recheable from s
+    // Set initial information for all nodes
+    // in case there are vertices unreachable from s
     for(let u of V) {
         level[u]=Infinity;
         parent[u]=undefined;
     }
 
+    // Set status of first not visited, which is s
     level[s]=0;
     parent[s]=null;
     frontier.push(s);
