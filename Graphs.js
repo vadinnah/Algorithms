@@ -54,38 +54,6 @@ var AdjacencyMatrix = function(nodes, edges, isDirected) {
 	}
 }
 
-var GraphWithoutPrototyping = function(V,E,isDirected=false) {
-	var me = this;
-	this.vertices = function(nodes){
-		if (nodes instanceof Array) {
-			return nodes;
-		}
-		else {
-			//Assume nodes is a number
-			indices = new Array(nodes);	
-			for(let i=0;i<nodes;)
-			{
-				indices[i] = ++i;
-			}
-			return indices;
-		}
-	}(V);
-	this.edges = E;
-    this.isDirected = isDirected;
-
-    this.adjacencyList = function() {
-        return new AdjacencyList(this.vertices,this.edges, this.isDirected);
-    }
-
-    this.adjacencyMatrix = function() {
-        return new AdjacencyMatrix(this.vertices,this.edges, this.isDirected);
-    };
-
-    // even using Graph.prototype.constructor = Graph 
-    // won't prevent each instance from having separate
-    // copies of member functions.
-};
-
 var Graph = function(V,E,isDirected=false) {
 	var me = this;
 	this.vertices = function(nodes){
