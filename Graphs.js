@@ -202,16 +202,18 @@ Graph.prototype.bfs = function(s) {
 }
 
 Graph.prototype.dfs_explore = function(SV) {
+    let me = this;
+
     //white=reached,gray=visiting,black=visited
     let color = {};
     let discoveryTime = {};
     let parents = {}
     let finishTime = {};
-    let timer = 0;
-    let me = this;
+    let timer = 0;    
     let al = me.adjacencyList();
     let vc = me.vertexColor;
     let topologicalSort = [];
+    let edgeToClassify = [...me.edges];
     let edgeClasses = new me.edgeClassifications();
 
     // define the recursed operations
@@ -222,11 +224,13 @@ Graph.prototype.dfs_explore = function(SV) {
         for(let v of al[u]) {
             if (color[v]===vc.WHITE) {
                 parents[v]=u;
-                dfs_visit(v);
                 edgeClasses.leaf.push([u,v]);
+                edgeToClassify = edgeToClassify.filter(e=>e[0]!==u||e[1]!==v);
+                dfs_visit(v);                
             }
             else if(color[v]===vc.GRAY) {
                 edgeClasses.back.push([u,v]);
+                edgeToClassify = edgeToClassify.filter(e=>e[0]!==u||e[1]!==v);
             }
         }
         color[u]=vc.BLACK;
@@ -251,14 +255,23 @@ Graph.prototype.dfs_explore = function(SV) {
         }
     }
 
-    for(let [u,v] in me.edges) {
-        if(edgeClasses.leaf.includes([u,v])===false && edgeClasses.back.includes([u,v])===false) {
-            if(discoveryTime[u]<discoveryTime[v]) {
-                edgeClasses.forward.push([u,v]);
-            }
-            else {
-                edgeClasses.cross.push([u,v]);
-            }
+    // for(let [u,v] of me.edges) {
+    //     if(edgeClasses.leaf.includes([u,v])===false && edgeClasses.back.includes([u,v])===false) {
+    //         if(discoveryTime[u]<discoveryTime[v]) {
+    //             edgeClasses.forward.push([u,v]);
+    //         }
+    //         else {
+    //             edgeClasses.cross.push([u,v]);
+    //         }
+    //     }
+    // }
+
+    for(let [u,v] of edgeToClassify) {
+        if(discoveryTime[u]<discoveryTime[v]) {
+            edgeClasses.forward.push([u,v]);
+        }
+        else {
+            edgeClasses.cross.push([u,v]);
         }
     }
 
