@@ -213,7 +213,6 @@ Graph.prototype.dfs_explore = function(SV) {
     let al = me.adjacencyList();
     let vc = me.vertexColor;
     let topologicalSort = [];
-    //let edgesToClassify = [...me.edges];
     let edgeClasses = new me.edgeClassifications();
 
     // define the recursed operations
@@ -239,8 +238,6 @@ Graph.prototype.dfs_explore = function(SV) {
                     edgeClasses.cross.push([u,v]);
                 }
             }
-
-            //edgesToClassify = edgesToClassify.filter(e=>e[0]!==u||e[1]!==v);
         }
         color[u]=vc.BLACK;
         timer++;
@@ -264,15 +261,6 @@ Graph.prototype.dfs_explore = function(SV) {
         }
     }
 
-    // for(let [u,v] of edgesToClassify) {
-    //     if(discoveryTime[u]<discoveryTime[v]) {
-    //         edgeClasses.forward.push([u,v]);
-    //     }
-    //     else {
-    //         edgeClasses.cross.push([u,v]);
-    //     }
-    // }
-
     // if parents[u]=null, that means in this iteration
     // of dfs that vertex doesn't have a parent
     return {discoveryTime,finishTime,parents,topologicalSort,edgeClasses};
@@ -289,21 +277,47 @@ Graph.prototype.dfsAtRoot = function(s) {
     return this.dfs_explore([s]);
 }
 
-Graph.prototype.isAcyclic = function(s) {
-    // true if no cycles detected
-    // there are no cycles if there are no back edges
-}
+Graph.prototype.isAcyclic = function() {
+    let me = this;
+    let backEdgeFound=false;
+    //white=reached,gray=visiting,black=visited
+    let color = {};    
+    let al = me.adjacencyList();
+    let vc = me.vertexColor;
 
-// Graph.prototype.topological_sort = function() {
-//     let {finishTime:f} = me.dfs();
-//     let a = [];
-//     for(let v in me.vertices) {
-//         a.push([f[v],v]);
-//     }
-//     a.sort();
-//     let res = a.map(v=>v[1]);
-//     return res;
-// }
+    // define the recursed operations
+    function dfs_visit(u) {
+        color[u] = vc.GRAY;
+        for(let i=0;i<al[u].length&&backEdgeFound===false;i++) {
+            let v=al[u][i];
+            if (color[v]===vc.WHITE) {
+                dfs_visit(v);                
+            }
+            else if(color[v]===vc.GRAY) {
+                backEdgeFound=true;                
+            }
+        }
+        color[u]=vc.BLACK;
+    };
+
+    // before graph exploration begins
+    // mark all vertices as not yet explored
+    for(let n of me.vertices) {
+        color[n]=vc.WHITE;
+    }
+
+    // explore graph
+    for(let i=0;i<me.vertices.length&&backEdgeFound===false;i++) {
+        let n=me.vertices[i];
+        if(color[n]===vc.WHITE) {
+            dfs_visit(n);
+        }
+    }
+
+    // if parents[u]=null, that means in this iteration
+    // of dfs that vertex doesn't have a parent
+    return !backEdgeFound;
+}
 
 //var WeightedGraph = function() {};
 
