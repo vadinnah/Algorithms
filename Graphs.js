@@ -89,7 +89,7 @@ Graph.prototype.vertexColor =  {
 };
 Object.freeze(Graph.prototype.vertexColor);
 
-Graph.prototype.edgeClassifications = function()
+Graph.prototype.EdgeClassifications = function()
 {
     this.back = [];
     this.leaf = [];
@@ -216,7 +216,7 @@ Graph.prototype.bfs = function(s) {
 //     let al = me.adjacencyList();
 //     let vc = me.vertexColor;
 //     let topologicalSort = [];
-//     let edgeClasses = new me.edgeClassifications();
+//     let edgeClasses = new me.EdgeClassifications();
 
 //     // define the recursed operations
 //     function dfs_visit(u) {
@@ -311,7 +311,8 @@ Graph.prototype.dfs_explore = function(SV) {
 };
 
 /**
- * @summary Implementation of dfs according to textbook
+ * @summary Implement depth-first and return a 
+ * map of each vertices parent. 
  */
 Graph.prototype.dfs = function() {
     return this.dfs_explore(this.vertices);
@@ -321,6 +322,10 @@ Graph.prototype.dfsAtRoot = function(s) {
     return this.dfs_explore([s]);
 }
 
+/**
+ * @description Use depth-first search to very whether
+ * or not this graph has a back edge, and thus is not acyclic
+ */
 Graph.prototype.isAcyclic = function() {
     let me = this;
     let backEdgeFound=false;
@@ -363,7 +368,11 @@ Graph.prototype.isAcyclic = function() {
     return !backEdgeFound;
 };
 
-Graph.prototype.topological_sort = function() {
+/**
+ * @description Use depth-first search to find
+ * a topological sort of this graph
+ */
+Graph.prototype.topologicalSort = function() {
     let me = this;
 
     //white=reached,gray=visiting,black=visited
@@ -402,7 +411,11 @@ Graph.prototype.topological_sort = function() {
     return result;
 };
 
-Graph.prototype.classify_edges = function() {
+/**
+ * @description Use depth-first search to classify each 
+ * edge as forward, back, leaf and cross.
+ */
+Graph.prototype.classifyEdges = function() {
     let me = this;
 
     //white=reached,gray=visiting,black=visited
@@ -414,7 +427,7 @@ Graph.prototype.classify_edges = function() {
     let al = me.adjacencyList();
     let vc = me.vertexColor;
     //let topologicalSort = [];
-    let edgeClasses = new me.edgeClassifications();
+    let edgeClasses = new me.EdgeClassifications();
 
     // define the recursed operations
     function dfs_visit(u) {
@@ -466,6 +479,78 @@ Graph.prototype.classify_edges = function() {
     // of dfs that vertex doesn't have a parent
     return edgeClasses;
 }
+
+/**
+ * @summary computes the strongly connected components
+ */
+Graph.prototype.computeSCC = function() {
+    let me = this;
+
+    let color = {};
+    let stack = [];  
+    let al = me.adjacencyList();
+    let vc = me.vertexColor;
+    let scc = [];
+
+    // define the recursed operations
+    function dfs_visit(u) {
+        if(color[u]!==vc.WHITE) {
+            return;
+        }
+        color[u] = vc.GRAY;
+        for(let v of al[u]) {
+            if (color[v]===vc.WHITE) {
+                dfs_visit(v);                
+            }
+        }
+        color[u]=vc.BLACK;
+        stack.unshift(u);
+    };
+
+    // before graph exploration begins
+    // mark all vertices as not yet explored
+    me.vertices.forEach(v=>color[v]=vc.WHITE);
+
+    // explore graph
+    me.vertices.forEach(v=>dfs_visit(v));
+
+    // 2. Compute transpose
+    let GT = new Graph(
+        stack,
+        me.edges.map(e=>[e[1],e[0]]),
+        me.isDirected
+    );
+
+    // 3. explore the transpose in the descending order vertex
+    //    finished exploration (lifo)
+    let colorT = {};
+    let c = -1;
+
+    function dfs_transpose(u,adjlist) {
+        colorT[u] = vc.GRAY;
+        for(let v of adjlist[u]) {
+            if (colorT[v]===vc.WHITE) {
+                scc[c][v]=u;
+                dfs_visit(v);                
+            }
+        }
+        colorT[u]=vc.BLACK;
+    }
+    
+    GT.vertices.forEach(t=>colorT[t]=vc.WHITE);
+
+    let transposeAL = GT.adjacencyList();
+    GT.vertices.forEach(v=> { 
+        if(colorT[v]===vc.WHITE) {
+            c++;
+            scc.push({});
+            scc[c][v]=null;
+            dfs_transpose(v,transposeAL);
+        }
+    });
+
+    return scc;
+};
 
 //var WeightedGraph = function() {};
 
