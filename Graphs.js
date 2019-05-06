@@ -552,6 +552,66 @@ Graph.prototype.computeSCC = function() {
     return scc;
 };
 
+/**
+ * @summary computes the strongly connected components of the graph
+ * 
+ * @description 
+ * The order in which a graph is explored depends 
+ * on both the order of V (vertex list) and E
+ * (edge list) passed into its ctor
+ */
+Graph.prototype.computeSCC = function() {
+    
+    function compute(G) {
+        let stack = [];
+        let color = {};
+        let scc = [];
+        let s = -1;
+        scc = [];
+
+        function dfs_visit(u,al) {
+            color[u]='g';
+            for(let v of al[u]) {
+                if(color[v]==='w') {
+                    scc[s].push(v);
+                    dfs_visit(v,al);
+                }				
+            }
+            color[u]='b';
+            stack.unshift(u);
+        }
+
+        G.vertices.forEach(v => color[v]='w');
+        let a2 = G.adjacencyList;
+        G.vertices.forEach(v => {
+            if(color[v]==='w') {
+                s++;
+                scc[s] = [];
+                scc[s].push(v);
+                dfs_visit(v,a2);
+            }
+        });
+        return {scc,stack};
+    };
+    
+
+    // 1. Compute finish times
+    let {stack:s} = compute(this);
+
+    // 2. Create tranpose of G
+    let GT = new Graph(
+        s //['b','e','a','c','d','g','h','f'] 
+        ,this.edges.map(e=>[e[1],e[0]])
+        ,this.isDirected
+    );
+    
+    // 3. Compute the strongly connected compoments (SCC)
+    let {scc:res} = compute(GT);
+    
+    return res;
+};
+
+
 //var WeightedGraph = function() {};
 
 module.exports = {
