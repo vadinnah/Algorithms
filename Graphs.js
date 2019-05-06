@@ -213,7 +213,7 @@ Graph.prototype.dfs_explore = function(SV) {
     let al = me.adjacencyList();
     let vc = me.vertexColor;
     let topologicalSort = [];
-    let edgeToClassify = [...me.edges];
+    //let edgesToClassify = [...me.edges];
     let edgeClasses = new me.edgeClassifications();
 
     // define the recursed operations
@@ -225,13 +225,22 @@ Graph.prototype.dfs_explore = function(SV) {
             if (color[v]===vc.WHITE) {
                 parents[v]=u;
                 edgeClasses.leaf.push([u,v]);
-                edgeToClassify = edgeToClassify.filter(e=>e[0]!==u||e[1]!==v);
                 dfs_visit(v);                
             }
             else if(color[v]===vc.GRAY) {
                 edgeClasses.back.push([u,v]);
-                edgeToClassify = edgeToClassify.filter(e=>e[0]!==u||e[1]!==v);
+                
             }
+            else {
+                if(discoveryTime[u]<discoveryTime[v]) {
+                    edgeClasses.forward.push([u,v]);
+                }
+                else {
+                    edgeClasses.cross.push([u,v]);
+                }
+            }
+
+            //edgesToClassify = edgesToClassify.filter(e=>e[0]!==u||e[1]!==v);
         }
         color[u]=vc.BLACK;
         timer++;
@@ -255,25 +264,14 @@ Graph.prototype.dfs_explore = function(SV) {
         }
     }
 
-    // for(let [u,v] of me.edges) {
-    //     if(edgeClasses.leaf.includes([u,v])===false && edgeClasses.back.includes([u,v])===false) {
-    //         if(discoveryTime[u]<discoveryTime[v]) {
-    //             edgeClasses.forward.push([u,v]);
-    //         }
-    //         else {
-    //             edgeClasses.cross.push([u,v]);
-    //         }
+    // for(let [u,v] of edgesToClassify) {
+    //     if(discoveryTime[u]<discoveryTime[v]) {
+    //         edgeClasses.forward.push([u,v]);
+    //     }
+    //     else {
+    //         edgeClasses.cross.push([u,v]);
     //     }
     // }
-
-    for(let [u,v] of edgeToClassify) {
-        if(discoveryTime[u]<discoveryTime[v]) {
-            edgeClasses.forward.push([u,v]);
-        }
-        else {
-            edgeClasses.cross.push([u,v]);
-        }
-    }
 
     // if parents[u]=null, that means in this iteration
     // of dfs that vertex doesn't have a parent
