@@ -699,7 +699,9 @@ Graph.prototype.isSpanningTree = function(A)
 		if(!av.includes(u)) av.push(u);
 		if(!av.includes(v)) av.push(v);  
 	});
-	
+    // console.log(A);
+    // console.log(av);
+    // console.log('----');
 	return V.every(v=>av.includes(v));
 };
 
@@ -722,34 +724,35 @@ Graph.prototype.kruskalMST = function() {
     // forest of disjoint tress
     let F = {};
     for(let v of this.vertices) {
-        // MakeSet(v);
         F[v] = [v];
     }
     let SE = sortEdges(this.edges);
-    //console.log(F);
     for(let [u,v,w] of SE) {
-        // if(findSet(u)!==findSet(v)) {
-        //     A.push([u,v]);
-        //     UNION(u,v);
-        // }
+        
         let left = F[u];
         let right = F[v];
         for(let i=0; i<left.length && i<right.length;i++) {
-            if(!left.includes(right[i]) || !right.includes(left[i])) {
+            // if(!left.includes(right[i]) || !right.includes(left[i])) {
+            //     A.push([u,v]);
+            //     F[u] = F[u].concat(F[v].filter(x=>!F[u].includes(x)));
+            //     F[v] = F[v].concat(F[u].filter(x=>!F[v].includes(x)));
+            // }
+            if(!left.includes(v) || !right.includes(u)) {
                 A.push([u,v]);
-                F[u] = F[u].concat(F[v].filter(x=>!F[u].includes));
-                F[v] = F[v].concat(F[u].filter(x=>!F[v].includes));
+                F[u].push(v);
+                F[v].push(u);
             }
         }
-
+        //console.log(F);
         if(this.isSpanningTree(A)) return A;
     }
     return A;
 };
 
+let {BubbleSort} = require('./Sorting');
 function sortEdges(E) {
-    let W = E.map(e=>e[2]);    
-    W.sort(); 
+    let W = E.map(e=>e[2]);  
+    W = BubbleSort(W); 
     let SE = [];
     let current = -1;
     W.forEach(w => {
