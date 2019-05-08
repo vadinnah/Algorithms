@@ -1,15 +1,19 @@
 'use strict';
 
-// #region AdjacencyList, AdjacencyMatrix, Graph classes
-
 var AdjacencyList = function(nodes, edges, isDirected) {
 	if (nodes instanceof Array) {
 		for(let n of nodes) {
 			this[n] = [];
-			for(let [u,v] of edges)
+			for(let [u,v,w] of edges)
 			{
-				if (u===n) this[n].push(v);
-				else if (!isDirected && v===n) this[n].push(u);
+				if (u===n) {
+                    this[n].push(v);
+                    if(w) this[n].push(w);
+                }
+				else if (!isDirected && v===n) {
+                    this[n].push(u);
+                    if(w) this[n].push(w);
+                }
 			}
 		}
 	}
@@ -18,39 +22,47 @@ var AdjacencyList = function(nodes, edges, isDirected) {
 		for(let i=1;i<=nodes;i++)
 		{
 			this[i] = [];
-			for(let [u,v] of edges)
+			for(let [u,v,w] of edges)
 			{
-				if (u===i) this[i].push(v);
-				else if (!isDirected && v===i) this[i].push(u);
+				if (u===i) {
+                    this[i].push(v);
+                    if(w) this[i].push(w);
+                }
+				else if (!isDirected && v===i) {
+                    this[i].push(u);
+                    if(w) this[i].push(w);
+                }
 			}
 		}
 	}
 }
 
 var AdjacencyMatrix = function(nodes, edges, isDirected) {
+    let hasWeights = (edges && edges.length>0) ? edges[0][2] : false;
 	if (nodes instanceof Array) {
 		for(let n of nodes) {
 			this[n] = {};
-			for(let m of nodes) {
-				this[n][m] = 0;
+			for(let [m,w] of nodes) {
+				this[n][m] = (hasWeights) ? Infinity : 0;
 			}
 		}
 	}
 	else {
 		//Assume nodes is a number
-		indices = new Array(nodes);	
+        indices = new Array(nodes);	
+        
 		for(let i=1;i<=nodes;i++)
 		{
 			this[i] = {};
 			for(let j=1;i<=nodes;j++) {
-				this[i][j] = 0;
+				this[i][j] = (hasWeights) ? Infinity : 0;
 			}
 		}
 	}
 
-	for(let [u,v] of edges) {
-		this[u][v] = 1;
-		if (!isDirected) this[v][u] = 1; 
+	for(let [u,v,w] of edges) {
+		this[u][v] = (w) ? w : 1;
+		if (!isDirected) this[v][u] = (w) ? w : 1; 
 	}
 }
 
@@ -611,8 +623,145 @@ Graph.prototype.computeSCC = function() {
     return res;
 };
 
+/**
+ * @summary 
+ * @description
+ * 
+ * An iteration of 
+ * **_Generic_MST(G,w)_**
+ * { 
+ *  A = null
+ *  **while** A does not form a spanning tree
+ * 	    **do** find an edge e that is safe for A
+ * 		    A.Add(e) 
+ *  **return** A
+ * }
+ * 
+ * 
+ * **_TERMS_** 
+ * 
+ * **G = (V,E)**
+ * 	V - set of vertices in G
+ *  E - set of edges in G
+ * 
+ * **Minimum Spanning Tree**, T = (V,A)
+ * 	T is composed of those edges in E that
+ * 	connect all vertices in V with min weight
+ * 	A = set of edges in T
+ * 		(A <subset of> E)
+ * 
+ * A **CUT**,C = C <subset of> V
+ * 
+ * An edge (u,v) in E **CROSSES** C 
+ * 	if either u or v is contained in C.
+ * 
+ * C **RESPECTS** A 
+ * 	if no vertex in C appears as an
+ * 	endpoint of any edge in A.
+ * 
+ * An edge (u,v) is a **LIGHT EDGE**
+ * 	if it has the min weight of all edges 
+ * 	crossing a cut, C.
+ * 
+ * A light edge is a **SAFE EDGE**
+ */
+Graph.prototype.ComputeMST = function()
+{
+	/* 
+	* A = null
+	* **while** A does not form a spanning tree
+	* 	**do** find an edge e that is safe for A
+	* 		A.Add(e) 
+	* **return** A
+	*/
+	function findSafeEdge(A)
+	{
 
-//var WeightedGraph = function() {};
+	}
+
+	let mst = [];	
+	while(!this.isSpanningTree(mst))
+	{
+		let e = findSafeEdge(mst)
+		mst.push(e);
+	}
+	return mst;
+};
+
+
+Graph.prototype.isSpanningTree = function(A)
+{
+	let av = [];
+	let V = this.vertices;
+	A.forEach(e=>{
+		//av=[...av,...e]
+		let [u,v] = e;
+		if(!av.includes(u)) av.push(u);
+		if(!av.includes(v)) av.push(v);  
+	});
+	
+	return V.every(v=>av.includes(v));
+};
+
+
+/**
+ * An iteration of 
+ * **_Generic_MST(G,w)_**
+ * { 
+ *  A = null
+ *  **while** A does not form a spanning tree
+ * 	    **do** find an edge e that is safe for A
+ * 		    A.Add(e) 
+ *  **return** A
+ * }
+ * 
+ * @param {Number} w
+ */ 
+Graph.prototype.kruskalMST = function() {
+    let A = [];
+    // forest of disjoint tress
+    let F = {};
+    for(let v of this.vertices) {
+        // MakeSet(v);
+        F[v] = [v];
+    }
+    let SE = sortEdges(this.edges);
+    //console.log(F);
+    for(let [u,v,w] of SE) {
+        // if(findSet(u)!==findSet(v)) {
+        //     A.push([u,v]);
+        //     UNION(u,v);
+        // }
+        let left = F[u];
+        let right = F[v];
+        for(let i=0; i<left.length && i<right.length;i++) {
+            if(!left.includes(right[i]) || !right.includes(left[i])) {
+                A.push([u,v]);
+                F[u] = F[u].concat(F[v].filter(x=>!F[u].includes));
+                F[v] = F[v].concat(F[u].filter(x=>!F[v].includes));
+            }
+        }
+
+        if(this.isSpanningTree(A)) return A;
+    }
+    return A;
+};
+
+function sortEdges(E) {
+    let W = E.map(e=>e[2]);    
+    W.sort(); 
+    let SE = [];
+    let current = -1;
+    W.forEach(w => {
+        if(current !== w) {
+            let r = E.filter(e => e[2]===w);
+            SE = [...SE, ...r];
+            current=w;
+        }
+    });
+    return SE;
+}
+
 
 module.exports = {
     AdjacencyList,
