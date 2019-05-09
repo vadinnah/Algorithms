@@ -774,6 +774,48 @@ Graph.prototype.kruskalMST = function() {
     return (isST) ? tree : 'Graph does not contain a spanning tree';    
 };
 
+Graph.prototype.primMST = function() {
+    /* Since we know that a spanning tree must containg every
+    vertex, start with an arbitrary vertex, find the light edge from that vertex */
+    let tree = [];
+    let V = [...this.vertices];
+    let E = [...this.edges];
+    let root = [V.pop()];
+    //let isST = false;
+
+    while(V.length > 0 && E.length > 0) {
+
+        //find lightest edge from root
+        let edgesFromRoot = [];
+        for(let [u,v,w] of E) {
+            if(u===root || v===root) {
+                edgesFromRoot.push([u,v,w]);
+            }
+        }
+        if(edgesFromRoot.length > 0) {
+            
+            let lightedge = edgesFromRoot[0];
+            for(let i=1;i<edgesFromRoot.length;i++) {
+                let e = edgesFromRoot[i];
+                if(e[2]<lightedge[2]) {
+                    lightedge=e;
+                }
+            }
+            
+            // Remove added vertices
+            if(V.indexOf(lightedge[0]) > -1) V.splice(V.indexOf(lightedge[0]),1);
+            if(V.indexOf(lightedge[1]) > -1) V.splice(V.indexOf(lightedge[1]),1);
+
+            // Remove visted edges
+            //E = E.filter(e=>!edgesFromRoot.includes(e));
+
+            tree.push(lightedge);
+        }
+        root = V.pop();
+    }
+    return tree;
+}
+
 let {BubbleSort} = require('./Sorting');
 function sortEdges(E) {
     let W = E.map(e=>e[2]);  
