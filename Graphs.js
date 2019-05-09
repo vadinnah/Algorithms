@@ -771,7 +771,7 @@ Graph.prototype.kruskalMST = function() {
         }
     }
 
-    return (isST) ? tree : null;    
+    return (isST) ? tree : 'Graph does not contain a spanning tree';    
 };
 
 let {BubbleSort} = require('./Sorting');
