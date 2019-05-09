@@ -1,5 +1,6 @@
 'use strict';
 
+// #region Helper classes
 var AdjacencyList = function(nodes, edges, isDirected) {
 	if (nodes instanceof Array) {
 		for(let n of nodes) {
@@ -65,6 +66,28 @@ var AdjacencyMatrix = function(nodes, edges, isDirected) {
 		if (!isDirected) this[v][u] = (w) ? w : 1; 
 	}
 }
+
+//An array of vertices
+var CutSet = function(V) {
+    this.cuts = {};
+    V.forEach( x => this.cuts[x] = [x]);
+}
+
+/**
+ * @returns true if edge (u,v) crosses a cut
+ */
+CutSet.prototype.CrossesCut = function(u,v) {
+    return cuts[x]!==cuts[v];
+}
+
+CutSet.prototype.join = function(u,v) {
+    if(this.cuts[x]!==this.cuts[v]) {
+        let newCut = [...cuts[u],...cuts[v]];
+        newCut.forEach(v => this.cuts[v] = newCut);
+    }
+}
+
+// #endregion Helper classes
 
 var Graph = function(V,E,isDirected=false) {
 	var me = this;
@@ -721,32 +744,41 @@ Graph.prototype.isSpanningTree = function(A)
  */ 
 Graph.prototype.kruskalMST = function() {
     let A = [];
-    // forest of disjoint tress
+    let treeWeight = 0;
+    // 1. Make the inititial cuts. At the start there
+    //    are V cuts, each containing a single vertex
     let F = {};
     for(let v of this.vertices) {
         F[v] = [v];
     }
+
+    // 2. Sort edges by their weight in ascending order
+    //    and visit them in the order of their increasing
+    //    weights.
     let SE = sortEdges(this.edges);
     for(let [u,v,w] of SE) {
         
-        let left = F[u];
-        let right = F[v];
-        for(let i=0; i<left.length && i<right.length;i++) {
-            // if(!left.includes(right[i]) || !right.includes(left[i])) {
-            //     A.push([u,v]);
-            //     F[u] = F[u].concat(F[v].filter(x=>!F[u].includes(x)));
-            //     F[v] = F[v].concat(F[u].filter(x=>!F[v].includes(x)));
-            // }
-            if(!left.includes(v) || !right.includes(u)) {
-                A.push([u,v]);
-                F[u].push(v);
-                F[v].push(u);
-            }
-        }
+        // let left = F[u];
+        // let right = F[v];
+        // for(let i=0; i<left.length && i<right.length;i++) {
+            
+        //     if(F[u]!==F[v]) {
+        //         A.push([u,v]);
+        //         treeWeight+=w;
+        //         let cut = [...F[u],...F[v]];
+        //         cut.forEach(c => F[c] = cut);
+        //     }
+        // }
         //console.log(F);
-        if(this.isSpanningTree(A)) return A;
+        if(F[u]!==F[v]) {
+            A.push([u,v]);
+            treeWeight+=w;
+            let cut = [...F[u],...F[v]];
+            cut.forEach(c => F[c] = cut);
+        }
+        if(this.isSpanningTree(A)) return {weight: treeWeight, mst: A, numberOfEdgesInMST: A.length};
     }
-    return A;
+    return {weight: treeWeight, mst: A, numberOfEdgesInMST: A.length};
 };
 
 let {BubbleSort} = require('./Sorting');
