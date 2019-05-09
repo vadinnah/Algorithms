@@ -722,9 +722,7 @@ Graph.prototype.isSpanningTree = function(A)
 		if(!av.includes(u)) av.push(u);
 		if(!av.includes(v)) av.push(v);  
 	});
-    // console.log(A);
-    // console.log(av);
-    // console.log('----');
+
 	return V.every(v=>av.includes(v));
 };
 
@@ -743,8 +741,10 @@ Graph.prototype.isSpanningTree = function(A)
  * @param {Number} w
  */ 
 Graph.prototype.kruskalMST = function() {
-    let A = [];
+    // 0. The spanning tree starts as an empty set of edges
+    let tree = [];
     let treeWeight = 0;
+    let isST = false;
     // 1. Make the inititial cuts. At the start there
     //    are V cuts, each containing a single vertex
     let F = {};
@@ -752,33 +752,26 @@ Graph.prototype.kruskalMST = function() {
         F[v] = [v];
     }
 
-    // 2. Sort edges by their weight in ascending order
-    //    and visit them in the order of their increasing
-    //    weights.
+    // 2. Sort edges by their weight in ascending order 
     let SE = sortEdges(this.edges);
-    for(let [u,v,w] of SE) {
-        
-        // let left = F[u];
-        // let right = F[v];
-        // for(let i=0; i<left.length && i<right.length;i++) {
-            
-        //     if(F[u]!==F[v]) {
-        //         A.push([u,v]);
-        //         treeWeight+=w;
-        //         let cut = [...F[u],...F[v]];
-        //         cut.forEach(c => F[c] = cut);
-        //     }
-        // }
-        //console.log(F);
+
+    // 3. Visit the sorted list of edges in the order 
+    //    of their increasing weights (ensuring that each visited 
+    //    edge is a safe edge) until a spanning tree is formed or 
+    //    no more edges remain.
+    while(!isST && SE.length > 0) {
+        // remove edges as they are inspected
+        let [u,v,w] = SE.shift();
         if(F[u]!==F[v]) {
-            A.push([u,v]);
+            tree.push([u,v,w]);
             treeWeight+=w;
             let cut = [...F[u],...F[v]];
             cut.forEach(c => F[c] = cut);
+            isST=this.isSpanningTree(tree);
         }
-        if(this.isSpanningTree(A)) return {weight: treeWeight, mst: A, numberOfEdgesInMST: A.length};
     }
-    return {weight: treeWeight, mst: A, numberOfEdgesInMST: A.length};
+
+    return (isST) ? tree : null;    
 };
 
 let {BubbleSort} = require('./Sorting');
