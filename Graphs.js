@@ -832,6 +832,69 @@ function sortEdges(E) {
     return SE;
 }
 
+Graph.prototype.sp = function()
+{
+    // Init single source
+    // Relax distance estimate 
+}
+
+Graph.prototype.initSingleSrc = function()
+{
+    // Init single source
+    // Relax distance estimate 
+}
+
+Graph.prototype.relaxEdge = function(u,v,w)
+{
+    if(d[v] > d[u]+d[v]) {
+        d[v] = d[u] + w;
+        p[v] = u;
+    }
+}
+Graph.prototype.BellmanFord = function(s) {
+
+    let d = {}; //distance
+    let p = {}; //parent
+    let V = this.vertices;
+    let E = this.edges;
+    let sources = [s];
+
+    function initSingleSource(s) {
+        for(let v of V) {
+            d[v]=Infinity;
+            p[v]=null;
+        }
+        d[s]=0;
+    }
+
+    function relaxEdge(u,v,w)
+    {
+        if(d[v] > d[u]+w) {
+            d[v] = d[u] + w;
+            p[v] = u;
+        }
+    }
+
+    
+    // The actual implementation Bellman-Ford algorthm
+    initSingleSource(s);
+    let i = V.length-1
+    while(i--) {
+        let SE = E.filter(e=> sources.includes(e[0]));
+        for(let [u,v,w] of SE) {
+            relaxEdge(u,v,w);
+            if(!sources.includes(v)) sources.push(v);
+        }
+        //console.log(d);
+    }
+    for(let [u,v,w] of E) {
+        if(d[v] > d[u] + w) {
+            return false;
+        }
+    }
+    console.log(p);
+    return true;
+}
 
 module.exports = {
     AdjacencyList,
