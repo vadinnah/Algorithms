@@ -363,7 +363,7 @@ Graph.prototype.topologicalSort = function() {
             }                
         }
         color[u]=vc.BLACK;
-        result.unshift(u);
+        result.push(u);
     };
 
     // before graph exploration begins
