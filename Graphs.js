@@ -806,8 +806,8 @@ Graph.prototype.DAG_SP = function(s) {
  *  * Q = V - S at the start of each iteration of the while loop
  */
 Graph.prototype.Dijkstra = function(s) {
-    let d = {};
-    let p = {};
+    let d = {}; // holds the weights of all paths as we progress through the alogrithm
+    let p = {}; // records the actual min path
     let Q = {};
     let V = this.vertices;
     let S = {}; 
