@@ -802,41 +802,42 @@ Graph.prototype.DAG_SP = function(s) {
  * }
  * 
  * * S is the set of vertices whose final shortest path has been found
- * * Q = V - S; min-priorty queue of vertices, keyed by their d[v] values
+ * * Q is min-priorty queue of vertices, keyed by their d[v] values
+ *  * Q = V - S at the start of each iteration of the while loop
  */
 Graph.prototype.Dijkstra = function(s) {
     let d = {};
     let p = {};
-    let Q = this.vertices;
-    let E = this.edges;
-    let S = []; 
+    let Q = {};
+    let V = this.vertices;
+    let S = {}; 
     let al = this.adjacencyList();
 
 
     // INITIALIZE-SINGLE-SOURCE(G,s)
-    for(let v of Q) {
+    for(let v of V) {
+        Q[v] = v;
         d[v]=Infinity;
-        p=null;
+        p[v]=null;
     }
     d[s]=0;
 
     // While Q != 0
-    while (Q.length) 
+    while (Object.keys(Q).length>0) 
     {
         // u <- EXTRACT-MIN(Q)
         let u;
         let min = Infinity;
-        for(let v in d) {
+        for(let v in Q) {
             if(d[v]<min) {
                 min = d[v];
                 u=v;
             }
         }
-        let i = Q.findIndex(u);
-        Q.splice(i,1);
+        delete Q[u];
 
         // S <- S ∪ {u}
-        S.push(u);
+        S[u]=d[u];
 
         // for each v ∈ Adj[u]
         for(let [v,w] of al[u])
@@ -848,7 +849,7 @@ Graph.prototype.Dijkstra = function(s) {
             }
         }
     }
-    return {shortestPaths:d,pathmap:p}
+    return {shortestPaths:S,pathmap:p}
 }
 // #endregion Shorted Path Algorithms
 
