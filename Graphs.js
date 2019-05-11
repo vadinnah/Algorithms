@@ -832,26 +832,6 @@ function sortEdges(E) {
     return SE;
 }
 
-Graph.prototype.sp = function()
-{
-    // Init single source
-    // Relax distance estimate 
-}
-
-Graph.prototype.initSingleSrc = function()
-{
-    // Init single source
-    // Relax distance estimate 
-}
-
-// Graph.prototype.relaxEdge = function(u,v,w)
-// {
-//     if(d[v] > d[u]+d[v]) {
-//         d[v] = d[u] + w;
-//         p[v] = u;
-//     }
-// }
-
 Graph.prototype.initializeSingleSource = function(V, s) {
     let distance = {}; //distance
     let parent = {}; //parent
