@@ -907,6 +907,7 @@ Graph.prototype.DAG_SP = function(s) {
     }
 
     let ts = this.topologicalSort();
+    console.log(ts);
     let {distance:d, parent:p} = this.initializeSingleSource(V, s);
     for(let u of ts) {
         for(let [v,w] of al[u]) {
@@ -914,6 +915,10 @@ Graph.prototype.DAG_SP = function(s) {
         }
     }
     return {d,p};
+}
+
+Graph.prototype.DijkstraShortestPath(s) {
+    throw "Not Implementation.";
 }
 
 module.exports = {

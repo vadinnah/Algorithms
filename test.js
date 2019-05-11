@@ -24,24 +24,41 @@ var {Graph} = require('./Graphs');
 //console.log(g.primMST());
 
 // to test Bellman Ford
-var g = new Graph(
-	['s','t','x','y','z']
+// var g = new Graph(
+// 	['s','t','x','y','z']
+// 	,[
+// 		['s','t',6]
+// 		,['s','y',7]
+// 		,['t','y',8]
+// 		,['z','s',2]
+// 		,['t','x',5]
+// 		,['x','t',-2]
+// 		,['z','x',7]
+// 		,['y','z',9]
+// 		,['y','x',-3]
+// 		,['t','z',-4]
+// 	]
+// 	,true
+// );
+//console.log(g.BellmanFord('s'));
+
+var dag = new Graph(
+	['r','s','t','x','y','z']
 	,[
-		['s','t',6]
-		,['s','y',7]
-		,['t','y',8]
-		,['z','s',2]
-		,['t','x',5]
-		,['x','t',-2]
-		,['z','x',7]
-		,['y','z',9]
-		,['y','x',-3]
-		,['t','z',-4]
+		['r','s',5]
+		,['s','t',2]
+		,['t','x',7]
+		,['x','y',-1]
+		,['y','z',-2]
+		,['s','x',6]
+		,['x','z',1]
+		,['r','t',3]
+		,['t','y',4]
+		,['t','z',2]
 	]
 	,true
 );
-//console.log(g.BellmanFord('s'));
-console.log(g.DAG_SP('s'));
+console.log(dag.DAG_SP('s'));
 
 // function bfs(al,s) {
 // 	let d = {}; //distance
