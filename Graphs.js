@@ -786,12 +786,74 @@ Graph.prototype.DAG_SP = function(s) {
     return {d,p};
 }
 
+/**
+ * @description
+ * 
+ * DIJKSTRA(G,w,s)
+ * {
+ *      INITIALIZE-SINGLE-SOURCE(G,s)
+ *      S <- Ø
+ *      Q <- V[G]
+ *      **while** Q != Ø
+ *          **do** u <- EXTRACT-MIN(Q)
+ *              S <- S ∪ {u}
+ *              **for** each v ∈ Adj[u]
+ *                  **do** RELAX(u,v,w)
+ * }
+ * 
+ * * S is the set of vertices whose final shortest path has been found
+ * * Q = V - S; min-priorty queue of vertices, keyed by their d[v] values
+ */
 Graph.prototype.Dijkstra = function(s) {
-    throw "Not Implementation.";
+    let d = {};
+    let p = {};
+    let Q = this.vertices;
+    let E = this.edges;
+    let S = []; 
+    let al = this.adjacencyList();
+
+
+    // INITIALIZE-SINGLE-SOURCE(G,s)
+    for(let v of Q) {
+        d[v]=Infinity;
+        p=null;
+    }
+    d[s]=0;
+
+    // While Q != 0
+    while (Q.length) 
+    {
+        // u <- EXTRACT-MIN(Q)
+        let u;
+        let min = Infinity;
+        for(let v in d) {
+            if(d[v]<min) {
+                min = d[v];
+                u=v;
+            }
+        }
+        let i = Q.findIndex(u);
+        Q.splice(i,1);
+
+        // S <- S ∪ {u}
+        S.push(u);
+
+        // for each v ∈ Adj[u]
+        for(let [v,w] of al[u])
+        {
+            // do RELAX(u,v,w)
+            if(d[v] > d[u]+w) {
+                d[v] = d[u] + w;
+                p[v] = u;
+            }
+        }
+    }
+    return {shortestPaths:d,pathmap:p}
 }
 // #endregion Shorted Path Algorithms
 
 
+function foo(s) {}
 module.exports = {
     AdjacencyList,
     AdjacencyMatrix,
