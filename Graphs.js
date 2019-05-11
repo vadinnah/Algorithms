@@ -717,48 +717,74 @@ function sortEdges(E) {
     Shortest Path Algorithms
 \*#####################################################*/
 // #region Shorted Path Algorithms
-Graph.prototype.initializeSingleSource = function(V, s) {
-    let distance = {}; //distance
-    let parent = {}; //parent
-    for(let v of V) {
-        distance[v]=Infinity;
-        parent[v]=null;
-    }
-    distance[s]=0;
-    return { distance, parent }
-}
-
-Graph.prototype.BellmanFord = function(s) {   
+/**
+ * @ description
+ *  BELLMAN-FORD(G,w,s)
+ * {
+ *      INITIALIZE-SINGLE-SOURCE(G,s)
+ *      **for** i <- 1 to |V|G||-1
+ *          **for** each edge (u,v) ∈ E[G]
+ *              **do** RELAX(u,v,w)
+ *      **for** each edge (u,v) ∈ E[G]
+ *          **if** d[v] > d[u] + w(u,v)
+ *              **return** FALSE
+ *      **return** TRUE
+ * }
+ * 
+ * INITIALIZE-SINGLE-SOURCE(G,s)
+ * {
+ *      **for** each vertex v ∈ V[G]
+ *          **do** d[v] <- ∞
+ *              π[v] <- NIL
+ *      d[s] <- 0
+ * }
+ * 
+ * RELAX(u,v,w)
+ * {
+ *      **if** d[v] > d[u] + w 
+ *          **then** d[v] <- d[u] + w;
+ *               π[v] <- u
+ * }
+ * 
+ * * d[u] holds shortest path estimate from s to u
+ * * π[v] holds the parents vertex of V
+ */
+Graph.prototype.BellmanFord = function(s) {
+    let d = {}; // holds the weights of all paths as we progress through the alogrithm
+    let p = {}; // records the actual min path   
     let V = this.vertices;
     let E = this.edges;
-    let sources = [s];
 
-    function relaxEdge(u,v,w)
-    {
-        if(d[v] > d[u]+w) {
-            d[v] = d[u] + w;
-            p[v] = u;
-        }
+    // INITIALIZE-SINGLE-SOURCE(G,s)
+    for(let v of V) {
+        d[v]=Infinity;
+        p[v]=null;
     }
+    d[s]=0;
 
-    
-    // The actual implementation Bellman-Ford algorthm
-    let {distance:d, parent:p} = this.initializeSingleSource(V, s)
-    let i = V.length-1
-    while(i--) {
-        //let EdgesFromSources = E.filter(e=> sources.includes(e[0]));
+    // for i <- 1 to |V|G||-1
+    //   for each edge (u,v) ∈ E[G]
+    //     do RELAX(u,v,w)
+    for(let i=0;i<V.length-1;i++) {
+
         for(let [u,v,w] of E) {
-            relaxEdge(u,v,w);
-            // if(!sources.includes(v)) sources.push(v);
+            if(d[v] > d[u]+w) {
+                d[v] = d[u] + w;
+                p[v] = u;
+            }
+
         }
-        console.log(d);
     }
+
+    // for each edge (u,v) ∈ E[G]
+    //   if d[v] > d[u] + w(u,v)
+    //     return FALSE
+    // return TRUE
     for(let [u,v,w] of E) {
         if(d[v] > d[u] + w) {
             return false;
         }
     }
-    console.log(p);
     return true;
 }
 
@@ -774,6 +800,24 @@ Graph.prototype.BellmanFord = function(s) {
  * }
  * 
  * * that statement u ∈ ts, takes each vertex u in topological sorted order
+ * 
+ * INITIALIZE-SINGLE-SOURCE(G,s)
+ * {
+ *      **for** each vertex v ∈ V[G]
+ *          **do** d[v] <- ∞
+ *              π[v] <- NIL
+ *      d[s] <- 0
+ * }
+ * 
+ * RELAX(u,v,w)
+ * {
+ *      **if** d[v] > d[u] + w 
+ *          **then** d[v] <- d[u] + w;
+ *               π[v] <- u
+ * }
+ * 
+ * * d[u] holds shortest path estimate from s to u
+ * * π[v] holds the parents vertex of V
  */
 Graph.prototype.DAG_SP = function(s) {
     let d = {}; // holds the weights of all paths as we progress through the alogrithm
@@ -822,7 +866,25 @@ Graph.prototype.DAG_SP = function(s) {
  * 
  * * S is the set of vertices whose final shortest path has been found
  * * Q is min-priorty queue of vertices, keyed by their d[v] values
- *  * Q = V - S at the start of each iteration of the while loop
+ *      * Q = V - S at the start of each iteration of the while loop
+ * 
+ * INITIALIZE-SINGLE-SOURCE(G,s)
+ * {
+ *      **for** each vertex v ∈ V[G]
+ *          **do** d[v] <- ∞
+ *              π[v] <- NIL
+ *      d[s] <- 0
+ * }
+ * 
+ * RELAX(u,v,w)
+ * {
+ *      **if** d[v] > d[u] + w 
+ *          **then** d[v] <- d[u] + w;
+ *               π[v] <- u
+ * }
+ * 
+ * * d[u] holds shortest path estimate from s to u
+ * * π[v] holds the parents vertex of V
  */
 Graph.prototype.Dijkstra = function(s) {
     let d = {}; // holds the weights of all paths as we progress through the alogrithm
@@ -873,7 +935,6 @@ Graph.prototype.Dijkstra = function(s) {
 // #endregion Shorted Path Algorithms
 
 
-function foo(s) {}
 module.exports = {
     AdjacencyList,
     AdjacencyMatrix,
