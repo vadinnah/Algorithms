@@ -7,13 +7,21 @@ var AdjacencyList = function(nodes, edges, isDirected) {
 			this[n] = [];
 			for(let [u,v,w] of edges)
 			{
-				if (u===n) {
-                    this[n].push(v);
-                    if(w) this[n].push(w);
+				if (u===n) {                   
+                    if(w) {
+                        this[n].push([v,w]);
+                    }
+                    else {
+                        this[n].push(v);
+                    }
                 }
 				else if (!isDirected && v===n) {
-                    this[n].push(u);
-                    if(w) this[n].push(w);
+                    if(w) {
+                        this[n].push([u,w]);
+                    }
+                    else {
+                        this[n].push(u);
+                    }
                 }
 			}
 		}
@@ -25,13 +33,21 @@ var AdjacencyList = function(nodes, edges, isDirected) {
 			this[i] = [];
 			for(let [u,v,w] of edges)
 			{
-				if (u===i) {
-                    this[i].push(v);
-                    if(w) this[i].push(w);
+				if (u===i) {                   
+                    if(w) {
+                        this[i].push([v,w]);
+                    }
+                    else {
+                        this[i].push(v);
+                    }
                 }
-				else if (!isDirected && v===i) {
-                    this[i].push(u);
-                    if(w) this[i].push(w);
+				else if (!isDirected && v===n) {
+                    if(w) {
+                        this[i].push([u,w]);
+                    }
+                    else {
+                        this[i].push(u);
+                    }
                 }
 			}
 		}
@@ -875,6 +891,29 @@ Graph.prototype.BellmanFord = function(s) {
     }
     console.log(p);
     return true;
+}
+
+Graph.prototype.DAG_SP = function(s) {
+    let V = this.vertices;
+    let E = this.edges;
+    let al = this.adjacencyList();
+
+    function relaxEdge(u,v,w)
+    {
+        if(d[v] > d[u]+w) {
+            d[v] = d[u] + w;
+            p[v] = u;
+        }
+    }
+
+    let ts = this.topologicalSort();
+    let {distance:d, parent:p} = this.initializeSingleSource(V, s);
+    for(let u of ts) {
+        for(let [v,w] of al[u]) {
+            relaxEdge(u,v,w);
+        }
+    }
+    return {d,p};
 }
 
 module.exports = {
