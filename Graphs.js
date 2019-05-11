@@ -844,28 +844,29 @@ Graph.prototype.initSingleSrc = function()
     // Relax distance estimate 
 }
 
-Graph.prototype.relaxEdge = function(u,v,w)
-{
-    if(d[v] > d[u]+d[v]) {
-        d[v] = d[u] + w;
-        p[v] = u;
-    }
-}
-Graph.prototype.BellmanFord = function(s) {
+// Graph.prototype.relaxEdge = function(u,v,w)
+// {
+//     if(d[v] > d[u]+d[v]) {
+//         d[v] = d[u] + w;
+//         p[v] = u;
+//     }
+// }
 
-    let d = {}; //distance
-    let p = {}; //parent
+Graph.prototype.initializeSingleSource = function(V, s) {
+    let distance = {}; //distance
+    let parent = {}; //parent
+    for(let v of V) {
+        distance[v]=Infinity;
+        parent[v]=null;
+    }
+    distance[s]=0;
+    return { distance, parent }
+}
+
+Graph.prototype.BellmanFord = function(s) {   
     let V = this.vertices;
     let E = this.edges;
     let sources = [s];
-
-    function initSingleSource(s) {
-        for(let v of V) {
-            d[v]=Infinity;
-            p[v]=null;
-        }
-        d[s]=0;
-    }
 
     function relaxEdge(u,v,w)
     {
@@ -877,15 +878,15 @@ Graph.prototype.BellmanFord = function(s) {
 
     
     // The actual implementation Bellman-Ford algorthm
-    initSingleSource(s);
+    let {distance:d, parent:p} = this.initializeSingleSource(V, s)
     let i = V.length-1
     while(i--) {
-        let SE = E.filter(e=> sources.includes(e[0]));
-        for(let [u,v,w] of SE) {
+        //let EdgesFromSources = E.filter(e=> sources.includes(e[0]));
+        for(let [u,v,w] of E) {
             relaxEdge(u,v,w);
-            if(!sources.includes(v)) sources.push(v);
+            // if(!sources.includes(v)) sources.push(v);
         }
-        //console.log(d);
+        console.log(d);
     }
     for(let [u,v,w] of E) {
         if(d[v] > d[u] + w) {
