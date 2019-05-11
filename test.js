@@ -42,23 +42,42 @@ var {Graph} = require('./Graphs');
 // );
 //console.log(g.BellmanFord('s'));
 
-var dag = new Graph(
-	['r','s','t','x','y','z']
+// var dag = new Graph(
+// 	['r','s','t','x','y','z']
+// 	,[
+// 		['r','s',5]
+// 		,['s','t',2]
+// 		,['t','x',7]
+// 		,['x','y',-1]
+// 		,['y','z',-2]
+// 		,['s','x',6]
+// 		,['x','z',1]
+// 		,['r','t',3]
+// 		,['t','y',4]
+// 		,['t','z',2]
+// 	]
+// 	,true
+// );
+// console.log(dag.DAG_SP('s'));
+
+// to test Dijkstra
+var dg = new Graph(
+	['s','t','x','y','z']
 	,[
-		['r','s',5]
-		,['s','t',2]
-		,['t','x',7]
-		,['x','y',-1]
-		,['y','z',-2]
-		,['s','x',6]
-		,['x','z',1]
-		,['r','t',3]
-		,['t','y',4]
-		,['t','z',2]
+		['s','t',10]
+		,['s','y',5]
+		,['t','y',2]
+		,['y','t',3]
+		,['z','s',7]
+		,['t','x',1]
+		,['x','z',4]
+		,['z','x',6]
+		,['y','z',2]
+		,['y','x',9]
 	]
 	,true
 );
-console.log(dag.DAG_SP('s'));
+console.log(dg.Dijkstra('s'));
 
 // function bfs(al,s) {
 // 	let d = {}; //distance
