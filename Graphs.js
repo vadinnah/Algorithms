@@ -1,5 +1,8 @@
 'use strict';
 
+/*#####################################################*\
+    Helper Classes
+\*#####################################################*/
 // #region Helper classes
 var AdjacencyList = function(nodes, edges, isDirected) {
 	if (nodes instanceof Array) {
@@ -82,27 +85,6 @@ var AdjacencyMatrix = function(nodes, edges, isDirected) {
 		if (!isDirected) this[v][u] = (w) ? w : 1; 
 	}
 }
-
-//An array of vertices
-var CutSet = function(V) {
-    this.cuts = {};
-    V.forEach( x => this.cuts[x] = [x]);
-}
-
-/**
- * @returns true if edge (u,v) crosses a cut
- */
-CutSet.prototype.CrossesCut = function(u,v) {
-    return cuts[x]!==cuts[v];
-}
-
-CutSet.prototype.join = function(u,v) {
-    if(this.cuts[x]!==this.cuts[v]) {
-        let newCut = [...cuts[u],...cuts[v]];
-        newCut.forEach(v => this.cuts[v] = newCut);
-    }
-}
-
 // #endregion Helper classes
 
 var Graph = function(V,E,isDirected=false) {
