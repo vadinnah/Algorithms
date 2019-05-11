@@ -762,28 +762,47 @@ Graph.prototype.BellmanFord = function(s) {
     return true;
 }
 
+/**
+ * @description
+ * DAG-SHORTEST-PATHS(G,w,s)
+ * {
+ *      ts <- TOPOLOGICAL-SORT(G)
+ *      INITIALIZE-SINGLE-SOURCE(G,s)
+ *      **for** u ∈ ts
+ *          **for** each v ∈ Adj[u]
+ *              **do** RELAX(u,v,w) 
+ * }
+ * 
+ * * that statement u ∈ ts, takes each vertex u in topological sorted order
+ */
 Graph.prototype.DAG_SP = function(s) {
+    let d = {}; // holds the weights of all paths as we progress through the alogrithm
+    let p = {}; // records the actual min path
     let V = this.vertices;
-    let E = this.edges;
     let al = this.adjacencyList();
 
-    function relaxEdge(u,v,w)
-    {
-        if(d[v] > d[u]+w) {
-            d[v] = d[u] + w;
-            p[v] = u;
-        }
-    }
-
+    // ts <- TOPOLOGICAL-SORT(G)
     let ts = this.topologicalSort();
-    console.log(ts);
-    let {distance:d, parent:p} = this.initializeSingleSource(V, s);
+
+    // INITIALIZE-SINGLE-SOURCE(G,s)
+    for(let v of V) {
+        d[v]=Infinity;
+        p[v]=null;
+    }
+    d[s]=0;
+
+    // for u ∈ ts
+    //   for each v ∈ Adj[u]
+    //     do RELAX(u,v,w)     
     for(let u of ts) {
         for(let [v,w] of al[u]) {
-            relaxEdge(u,v,w);
+            if(d[v] > d[u]+w) {
+                d[v] = d[u] + w;
+                p[v] = u;
+            }
         }
     }
-    return {d,p};
+    return {shortPathValues:d,path:p};
 }
 
 /**
