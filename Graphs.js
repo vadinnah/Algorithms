@@ -148,6 +148,12 @@ Graph.prototype.EdgeClassifications = function()
     this.cross = [];
 }
 
+
+/*#####################################################*\
+    Breadth-First Search Algorithms
+\*#####################################################*/
+// #region BFS Algorithms
+
 /**
  * @summary implementation from MIT OCW Course 
  * @param {*} s starting vertex
@@ -251,78 +257,24 @@ Graph.prototype.bfs = function(s) {
     }
     return {distance,parent};
 }
-
-/**
- * @description performs dfs,topological_sort and classifies edges
- */
-// Graph.prototype.dfs_eeverything = function(SV) {
-//     let me = this;
-
-//     //white=reached,gray=visiting,black=visited
-//     let color = {};
-//     let discoveryTime = {};
-//     let parents = {}
-//     let finishTime = {};
-//     let timer = 0;    
-//     let al = me.adjacencyList();
-//     let vc = me.vertexColor;
-//     let topologicalSort = [];
-//     let edgeClasses = new me.EdgeClassifications();
-
-//     // define the recursed operations
-//     function dfs_visit(u) {
-//         color[u] = vc.GRAY;
-//         timer++;
-//         discoveryTime[u]=timer;
-//         for(let v of al[u]) {
-//             if (color[v]===vc.WHITE) {
-//                 parents[v]=u;
-//                 edgeClasses.leaf.push([u,v]);
-//                 dfs_visit(v);                
-//             }
-//             else if(color[v]===vc.GRAY) {
-//                 edgeClasses.back.push([u,v]);
-                
-//             }
-//             else {
-//                 if(finishTime[u]<finishTime[v]) {
-//                     edgeClasses.forward.push([u,v]);
-//                 }
-//                 else {
-//                     edgeClasses.cross.push([u,v]);
-//                 }
-//             }
-//         }
-//         color[u]=vc.BLACK;
-//         timer++;
-//         finishTime[u]=timer;
-//         topologicalSort.unshift(u);
-//     };
-
-//     // before graph exploration begins
-//     // mark all vertices as not yet explored
-//     for(let n of me.vertices) {
-//         color[n]=vc.WHITE;
-//         discoveryTime[n]=undefined;
-//         finishTime[n]=undefined;
-//         parents[n]=null;
-//     }
-
-//     // explore graph
-//     for(let n of SV) {
-//         if(color[n]===vc.WHITE) {
-//             dfs_visit(n);
-//         }
-//     }
-
-//     // if parents[u]=null, that means in this iteration
-//     // of dfs that vertex doesn't have a parent
-//     return {discoveryTime,finishTime,parents,topologicalSort,edgeClasses};
-// };
+// #endregion BFS Algorithms
 
 
-Graph.prototype.dfs_explore = function(SV) {
+/*#####################################################*\
+    Basic Depth-First Search Algorithms and 
+    variations of DFS to 
+        - detect cycles
+        - find the topological sort
+        - compute the strong connected components
+\*#####################################################*/
+// #region DFS Algortihms
+Graph.prototype.dfs = function(s) {
     let me = this;
+
+    let SV = [...this.vertices];
+    if(s) {
+        SV = [s];
+    } 
 
     //white=reached,gray=visiting,black=visited
     let color = {};
@@ -360,18 +312,6 @@ Graph.prototype.dfs_explore = function(SV) {
     // of dfs that vertex doesn't have a parent
     return parents;
 };
-
-/**
- * @summary Implement depth-first and return a 
- * map of each vertices parent. 
- */
-Graph.prototype.dfs = function() {
-    return this.dfs_explore(this.vertices);
-}
-
-Graph.prototype.dfsAtRoot = function(s) {
-    return this.dfs_explore([s]);
-}
 
 /**
  * @description Use depth-first search to very whether
@@ -532,78 +472,6 @@ Graph.prototype.classifyEdges = function() {
 }
 
 /**
- * @summary computes the strongly connected components
- */
-Graph.prototype.computeSCC = function() {
-    let me = this;
-
-    let color = {};
-    let stack = [];  
-    let al = me.adjacencyList();
-    let vc = me.vertexColor;
-    let scc = [];
-
-    // define the recursed operations
-    function dfs_visit(u) {
-        if(color[u]!==vc.WHITE) {
-            return;
-        }
-        color[u] = vc.GRAY;
-        for(let v of al[u]) {
-            if (color[v]===vc.WHITE) {
-                dfs_visit(v);                
-            }
-        }
-        color[u]=vc.BLACK;
-        stack.unshift(u);
-    };
-
-    // before graph exploration begins
-    // mark all vertices as not yet explored
-    me.vertices.forEach(v=>color[v]=vc.WHITE);
-
-    // explore graph
-    me.vertices.forEach(v=>dfs_visit(v));
-
-    // 2. Compute transpose
-    let GT = new Graph(
-        stack,
-        me.edges.map(e=>[e[1],e[0]]),
-        me.isDirected
-    );
-
-    // 3. explore the transpose in the descending order vertex
-    //    finished exploration (lifo)
-    let colorT = {};
-    let c = -1;
-
-    function dfs_transpose(u,adjlist) {
-        colorT[u] = vc.GRAY;
-        for(let v of adjlist[u]) {
-            if (colorT[v]===vc.WHITE) {
-                scc[c][v]=u;
-                dfs_visit(v);                
-            }
-        }
-        colorT[u]=vc.BLACK;
-    }
-    
-    GT.vertices.forEach(t=>colorT[t]=vc.WHITE);
-
-    let transposeAL = GT.adjacencyList();
-    GT.vertices.forEach(v=> { 
-        if(colorT[v]===vc.WHITE) {
-            c++;
-            scc.push({});
-            scc[c][v]=null;
-            dfs_transpose(v,transposeAL);
-        }
-    });
-
-    return scc;
-};
-
-/**
  * @summary computes the strongly connected components of the graph
  * 
  * @description 
@@ -633,7 +501,7 @@ Graph.prototype.computeSCC = function() {
         }
 
         G.vertices.forEach(v => color[v]='w');
-        let a2 = G.adjacencyList;
+        let a2 = G.adjacencyList();
         G.vertices.forEach(v => {
             if(color[v]==='w') {
                 s++;
@@ -661,11 +529,34 @@ Graph.prototype.computeSCC = function() {
     
     return res;
 };
+// #endregion DFS Algortihms
+
+/*#####################################################*\
+    Algorithms to find the minimum spanning tree
+\*#####################################################*/
+// #region MST Algorithms
+
+Graph.prototype.isSpanningTree = function(A)
+{
+	let av = [];
+	let V = this.vertices;
+	A.forEach(e=>{
+		//av=[...av,...e]
+		let [u,v] = e;
+		if(!av.includes(u)) av.push(u);
+		if(!av.includes(v)) av.push(v);  
+	});
+
+	return V.every(v=>av.includes(v));
+};
+
 
 /**
- * @summary 
- * @description
  * 
+ * @summary Implementation of Kurskals algorithm 
+ * for finding minimum spanning tree.
+ * 
+ * @description
  * An iteration of 
  * **_Generic_MST(G,w)_**
  * { 
@@ -675,7 +566,6 @@ Graph.prototype.computeSCC = function() {
  * 		    A.Add(e) 
  *  **return** A
  * }
- * 
  * 
  * **_TERMS_** 
  * 
@@ -703,58 +593,6 @@ Graph.prototype.computeSCC = function() {
  * 	crossing a cut, C.
  * 
  * A light edge is a **SAFE EDGE**
- */
-Graph.prototype.ComputeMST = function()
-{
-	/* 
-	* A = null
-	* **while** A does not form a spanning tree
-	* 	**do** find an edge e that is safe for A
-	* 		A.Add(e) 
-	* **return** A
-	*/
-	function findSafeEdge(A)
-	{
-
-	}
-
-	let mst = [];	
-	while(!this.isSpanningTree(mst))
-	{
-		let e = findSafeEdge(mst)
-		mst.push(e);
-	}
-	return mst;
-};
-
-
-Graph.prototype.isSpanningTree = function(A)
-{
-	let av = [];
-	let V = this.vertices;
-	A.forEach(e=>{
-		//av=[...av,...e]
-		let [u,v] = e;
-		if(!av.includes(u)) av.push(u);
-		if(!av.includes(v)) av.push(v);  
-	});
-
-	return V.every(v=>av.includes(v));
-};
-
-
-/**
- * An iteration of 
- * **_Generic_MST(G,w)_**
- * { 
- *  A = null
- *  **while** A does not form a spanning tree
- * 	    **do** find an edge e that is safe for A
- * 		    A.Add(e) 
- *  **return** A
- * }
- * 
- * @param {Number} w
  */ 
 Graph.prototype.kruskalMST = function() {
     // 0. The spanning tree starts as an empty set of edges
@@ -790,6 +628,49 @@ Graph.prototype.kruskalMST = function() {
     return (isST) ? tree : 'Graph does not contain a spanning tree';    
 };
 
+/**
+ * 
+ * @summary Implementation of Prims algorithm for 
+ * finding minimum spanning tree.
+ * 
+ * @description
+ * An iteration of 
+ * **_Generic_MST(G,w)_**
+ * { 
+ *  A = null
+ *  **while** A does not form a spanning tree
+ * 	    **do** find an edge e that is safe for A
+ * 		    A.Add(e) 
+ *  **return** A
+ * }
+ * 
+ * **_TERMS_** 
+ * 
+ * **G = (V,E)**
+ * 	V - set of vertices in G
+ *  E - set of edges in G
+ * 
+ * **Minimum Spanning Tree**, T = (V,A)
+ * 	T is composed of those edges in E that
+ * 	connect all vertices in V with min weight
+ * 	A = set of edges in T
+ * 		(A <subset of> E)
+ * 
+ * A **CUT**,C = C <subset of> V
+ * 
+ * An edge (u,v) in E **CROSSES** C 
+ * 	if either u or v is contained in C.
+ * 
+ * C **RESPECTS** A 
+ * 	if no vertex in C appears as an
+ * 	endpoint of any edge in A.
+ * 
+ * An edge (u,v) is a **LIGHT EDGE**
+ * 	if it has the min weight of all edges 
+ * 	crossing a cut, C.
+ * 
+ * A light edge is a **SAFE EDGE**
+ */
 Graph.prototype.primMST = function() {
     /* Since we know that a spanning tree must containg every
     vertex, start with an arbitrary vertex, find the light edge from that vertex */
@@ -847,7 +728,13 @@ function sortEdges(E) {
     });
     return SE;
 }
+// #endregion MST Algorithms
 
+
+/*#####################################################*\
+    Shortest Path Algorithms
+\*#####################################################*/
+// #region Shorted Path Algorithms
 Graph.prototype.initializeSingleSource = function(V, s) {
     let distance = {}; //distance
     let parent = {}; //parent
@@ -917,9 +804,11 @@ Graph.prototype.DAG_SP = function(s) {
     return {d,p};
 }
 
-Graph.prototype.DijkstraShortestPath(s) {
+Graph.prototype.Dijkstra = function(s) {
     throw "Not Implementation.";
 }
+// #endregion Shorted Path Algorithms
+
 
 module.exports = {
     AdjacencyList,
