@@ -35,7 +35,7 @@ There are two ways to traverse a graph, **Breadth-First Search (BFS)** or **Dept
 
 #### Breadth-First Search (BFS)
 
-___How BFS works:___
+##### How BFS works:
 The basic notion of this algorithm is 
 > BFS discovers all vertices at distance `k` from starting vertex `s` before discovering vertices at distance `k+1` from `s` and so on. 
 
@@ -49,7 +49,7 @@ During execution, BFS performs three things,
   
 With regards to BFS, a vertex is "explored" when each member of the vertex's adjacency list has been examined (i.e. discovered). 
 
-___Properties of BFS:___
+##### Properties of BFS:
 Given a starting vertex `s` in the set of vertices in a graph `V[G]`, BFS will find the shortest path `δ(s,v)` as the minimum number of edges in the path `(s..v)`
 > in other words, BFS can be used to find the single-source shortest path _if-and-only-if_ the graph is unweighted (hence, the only concern is the number of edges in the path)
 
