@@ -76,7 +76,7 @@ With regards to BFS, a vertex is "explored" when each member of the vertex's adj
 Given a starting vertex `s` in the set of vertices in a graph `V[G]`, BFS will find the shortest path `δ(s,v)` as the minimum number of edges in the path `(s..v)`
 > in other words, BFS can be used to find the single-source shortest path _if-and-only-if_ the graph is unweighted (hence, the only concern is the number of edges in the path)
 
- 
+BFS composes a single tree of the graph (only 1 root).  
 
 
 
