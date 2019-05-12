@@ -31,6 +31,15 @@ A graph can be:
 
 There are two ways to traverse a graph, **Breadth-First Search (BFS)** or **Depth-First Search (DFS)**. 
 
+Applications of graph search include
+* web crawling
+* social networking
+* network broadcast
+* garbage collection
+* model checking
+* checking mathematical models and conjectures
+* solving puzzles and games 
+
 **All graph traversal algorithms fall into one of the two methods.**
 
 #### Breadth-First Search (BFS)
