@@ -35,6 +35,29 @@ There are two ways to traverse a graph, **Breadth-First Search (BFS)** or **Dept
 
 #### Breadth-First Search (BFS)
 
+```
+BFS(G,s):
+  for each v ∈ v[G] -s          // Step 1 
+    d[v] <- ∞             
+    π[v] <- NIL
+    color[v] <- WHITE
+ 
+  d[s] <- 0;                    // Step 2
+  π[s] <- NIL
+  color[s] <- GRAY
+ 
+  Q.enqueue(s)                  // Step 3
+  while Q ≠ Ø 
+    u <- Q.dequeue()
+    for each v ∈ AdjList(u)
+      if color[v]=WHITE
+        d[v] <- d[u]+1
+        π[v] <- u
+        color[v] <- GRAY
+        Q.enqueue(v)
+    color[u] <- BLACK
+``` 
+
 ##### How BFS works:
 The basic notion of this algorithm is 
 > BFS discovers all vertices at distance `k` from starting vertex `s` before discovering vertices at distance `k+1` from `s` and so on. 
