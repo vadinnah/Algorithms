@@ -18,6 +18,7 @@ A graph can be:
 * **Directed** (edges are unidirectional) or **Undirected** (edges are bidirectional)
 * **Weighted** (edges have varying weights) or **Unweighted** (all edges have the same weight).
 * **Sparse** (the number of edges, E, is much less than the numbers of vertices squared, E < V^2) or **Dense** (the number of edges, E, is close to the numbers of vertices squared, E ~ V^2)
+* **Graph Diameter** is a property of a **Configuration Graph**. It records the length from the two farthest states, represented as vertices.
 
 ### Graphs Problems
 
@@ -31,6 +32,8 @@ A graph can be:
 
 There are two ways to traverse a graph, **Breadth-First Search (BFS)** or **Depth-First Search (DFS)**. 
 
+**All graph traversal algorithms fall into one of the two methods.**
+
 Applications of graph search include
 * web crawling
 * social networking
@@ -38,9 +41,7 @@ Applications of graph search include
 * garbage collection
 * model checking
 * checking mathematical models and conjectures
-* solving puzzles and games 
-
-**All graph traversal algorithms fall into one of the two methods.**
+* solving puzzles and games (config graph)
 
 #### Breadth-First Search (BFS)
 
@@ -66,6 +67,7 @@ BFS(G,s):
         Q.enqueue(v)
     color[u] <- BLACK
 ``` 
+Time complexity: O(V+E)
 
 ##### How BFS works:
 BFS takes a breadth-first approach to traversing a tree. 
@@ -92,16 +94,16 @@ BFS composes a single tree of the graph (only 1 root).
 #### Depth-First Search (DFS)
 ```
 DFS(G):
-  for each v ∈ V[G]            
-    d[v] <- ∞                   
-    f[v] <- ∞
+  for each v ∈ V[G]            // Step 1. Initialize the parent,    
+    d[v] <- ∞                  // discovery time, finish time and 
+    f[v] <- ∞                  // traversal status of each vertex 
     π[v] <- NIL
     color[v] <- WHITE
  
-  time <- 0
+  time <- 0                    // Step 2. Start the "clock"
   
-  for each u ∈ V[G]
-    DFS-VISIT(u)
+  for each u ∈ V[G]            // Step 3. Visit each vertex
+    DFS-VISIT(u) 
 ---
 
 DFS-VISIT(u):
@@ -123,3 +125,42 @@ DFS-VISIT(u):
 DFS takes a depth-first approach to traversing a tree.
 > For each vertex `v` discovered, search of child of `v`, and once the end is reached, "backtrack" to the parent of `v` and search a sibling of `v`
 
+During execution, DFS performs three things,
+1. records the time a vertex `v` is discovered (discovery time) and the time the vertex finished being explored (finish time) for each vertex `v ∈ V[G]`.
+
+   ..._(compare to BFS, which computes distance from some starting vertex `s` to `v`)_
+2. records the parent of each vertex `v` in the path `s..v` (conincidentally, forming the DFS forest)
+3. tracks the traversl state of each vertex during execution. For simplicity, the algorithm usually uses colors: `WHITE`,`GRAY` and `BLACK`
+  * `WHITE` - vertex is undiscovered
+  * `GRAY` - vertex has been discovered, but not fully explored
+  * `BLACK` - vertex has been explored
+
+##### Properties of DFS:
+
+***Property:*** DFS computers forests 
+DFS computes a forest of the graph. A forest is a set of disjoint trees. Compare to BFS, which can only form a tree rooted at the starting vertex. 
+
+***Property:*** DFS can be modified to **classify edges**
+
+***Property:*** DFS can be modified to **detect cycles**
+
+***Property:*** DFS can be modified to perform a **topological sort** of a graph
+
+###### Edge Classification
+
+There are 4 types of edges in a graph:
+1. Leaf edge: An edge that adds a new vertex to the tree.
+
+   ..._Vertex v of the edge (u,v) was previously undiscovered._
+2. Forward edge: An edge (u,v) that leads to an descendant in the tree
+
+   ..._the depth of vertex v > depth of vertex u._  
+3. Back edge: An edge (u,v) that leads to an ancestor in the tree 
+
+   ..._the depth of vertex v < depth of vertex u._
+4. Cross edge: Any edge not a leaf, forward or back edge.
+
+**Important Note: In an Undirected Graph, forward edges and cross edges are not possible.**
+
+###### Cycle Detection
+###### Topological Sort
