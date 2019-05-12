@@ -35,4 +35,26 @@ There are two ways to traverse a graph, **Breadth-First Search (BFS)** or **Dept
 
 #### Breadth-First Search (BFS)
 
+___How BFS works:___
+The basic notion of this algorithm is 
+> BFS discovers all vertices at distance `k` from starting vertex `s` before discovering vertices at distance `k+1` from `s` and so on. 
+
+During execution, BFS performs three things,
+1. records the distance from `s` for each vertex `v ∈ V[G]`
+2. records the parent of each vertex `v` in the path `s..v` (conincidentally, forming a BFS tree)
+3. tracks the traversl state of each vertex during execution. For simplicity, the algorithm usually uses colors: `WHITE`,`GRAY` and `BLACK`
+  * `WHITE` - vertex is undiscovered
+  * `GRAY` - vertex has been discovered, but not fully explored
+  * `BLACK` - vertex has been explored
+  
+With regards to BFS, a vertex is "explored" when each member of the vertex's adjacency list has been examined (i.e. discovered). 
+
+___Properties of BFS:___
+Given a starting vertex `s` in the set of vertices in a graph `V[G]`, BFS will find the shortest path `δ(s,v)` as the minimum number of edges in the path `(s..v)`
+> in other words, BFS can be used to find the single-source shortest path _if-and-only-if_ the graph is unweighted (and hence are only concerned with the number of edges in the path)
+
+ 
+
+
+
 #### Depth-First Search (DFS)
