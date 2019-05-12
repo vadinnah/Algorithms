@@ -147,64 +147,6 @@ Graph.prototype.EdgeClassifications = function()
 // #region BFS Algorithms
 
 /**
- * @summary implementation from MIT OCW Course 
- * @param {*} s starting vertex
- */
-Graph.prototype.bfs_mit = function(s) {
-    
-    let al = this.adjacencyList();
-    let V = this.vertices;
-
-    // Track distance of each node from start
-    let level = {};
-    // Track the parent of each node from start
-    let parent = {};
-    // Track the nodes we have visited
-    let frontier = [];
-
-    // Set initial information for all nodes
-    // in case there are vertices unreachable from s
-    for(let u of V) {
-        level[u]=Infinity;
-        parent[u]=undefined;
-    }
-
-    // Set status of first not visited, which is s
-    level[s]=0;
-    parent[s]=null;
-    frontier.push(s);
-
-    // Track the current level
-    let i = 1;
-
-    while(frontier && frontier.length>0) {
-        // Track those nodes that will become a part of the next frontier
-        let next = [];
-        // Explore the nodes in the curent frontier
-        for(let u of frontier) {
-            for(let v of al[u]) {
-                if(level[v]===Infinity)
-                {
-                    // set the current level of the newly reached node
-                    level[v]=i;
-                    // set the parents of the newly reach node
-                    parent[v]=u;
-                    // mark newly reach node as a new frontier
-                    next.push(v);
-                }
-            }
-        }
-        // Now that we have explored every node in the current
-        // frontier, time to traverse the nodes in the next frontier
-        frontier = next;
-        // Mark the level (distance from start) of the new frontier
-        i++;
-    }
-    
-    return {distance: level,parent};
-};
-
-/**
  * @summary Implementation of bfs according to textbook
  * @description
  * @param {*} s 
