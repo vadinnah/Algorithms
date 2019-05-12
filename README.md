@@ -37,7 +37,7 @@ There are two ways to traverse a graph, **Breadth-First Search (BFS)** or **Dept
 
 ```
 BFS(G,s):
-  for each v ∈ v[G] -s          // Step 1: assign default values for distance, parent and
+  for each v ∈ V[G] -s          // Step 1: assign default values for distance, parent and
     d[v] <- ∞                   //         traversal state for all v ∈ v[G], except s
     π[v] <- NIL
     color[v] <- WHITE
@@ -59,7 +59,7 @@ BFS(G,s):
 ``` 
 
 ##### How BFS works:
-The basic notion of this algorithm is 
+BFS takes a breadth-first approach to traversing a tree. 
 > BFS discovers all vertices at distance `k` from starting vertex `s` before discovering vertices at distance `k+1` from `s` and so on. 
 
 During execution, BFS performs three things,
@@ -81,3 +81,36 @@ BFS composes a single tree of the graph (only 1 root).
 
 
 #### Depth-First Search (DFS)
+```
+DFS(G):
+  for each v ∈ V[G]            
+    d[v] <- ∞                   
+    f[v] <- ∞
+    π[v] <- NIL
+    color[v] <- WHITE
+ 
+  time <- 0
+  
+  for each u ∈ V[G]
+    DFS-VISIT(u)
+---
+
+DFS-VISIT(u):
+  color[u]=GRAY
+  time <- time + 1
+  d[v] <- time
+
+  for each v ∈ AdjList(u)
+    if color[v]=WHITE
+      π[v] <- u
+      DFS-VISIT(v)
+  color[u] <- BLACK
+  time <- time + 1
+  f[v] <- time
+---
+```
+
+##### How BFS works:
+DFS takes a depth-first approach to traversing a tree.
+> For each vertex `v` discovered, search of child of `v`, and once the end is reached, "backtrack" to the parent of `v` and search a sibling of `v`
+
