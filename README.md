@@ -58,6 +58,8 @@ BFS(G,s):
     color[u] <- BLACK
 ``` 
 
+BFS takes a breadth-first approach to traversing a tree. 
+
 ##### How BFS works:
 The basic notion of this algorithm is 
 > BFS discovers all vertices at distance `k` from starting vertex `s` before discovering vertices at distance `k+1` from `s` and so on. 
@@ -109,3 +111,5 @@ DFS-VISIT(u):
   f[v] <- time
 ---
 ```
+
+DFS takes a depth-first approach to traversing a tree.
