@@ -275,7 +275,6 @@ Graph.prototype.bfs = function(s) {
                 Q.push(v);
             }
         }
-        console.log(Q);
     }
     return {distance:d,tree:p};
 }
