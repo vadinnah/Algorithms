@@ -209,7 +209,7 @@ Graph.prototype.bfs_mit = function(s) {
  * @description
  * @param {*} s 
  */
-Graph.prototype.bfs = function(s) {
+Graph.prototype.bfs_textbook = function(s) {
     let me = this;
     //white=reached,gray=visiting,black=visited
     let color = {};
@@ -224,7 +224,7 @@ Graph.prototype.bfs = function(s) {
         if(u!==s) {
             color[u]=WHITE;
             distance[u]=Infinity;
-            parent[u]=undefined; 
+            parent[u]=null; 
         }
     }
 
@@ -247,6 +247,37 @@ Graph.prototype.bfs = function(s) {
         color[u]=BLACK;
     }
     return {distance,parent};
+}
+
+/**
+ * @description 
+ * My version of bfs, which is just 
+ * bfs_textbook simplified
+ */
+Graph.prototype.bfs = function(s) {
+    let d = {}; //track distance
+    let p = {}; // track parent
+    let V = this.vertices;
+    let al = this.adjacencyList();
+
+    for(let v of V) {
+        d[v]=Infinity;
+        p[v]=null;
+    }
+    d[s]=0;
+    let Q = [s];
+    while(Q.length>0) {
+        let u = Q.shift();
+        for(let v of al[u]) {
+            if(p[v]===null) {
+                d[v]=d[u]+1;
+                p[v]=u;
+                Q.push(v);
+            }
+        }
+        console.log(Q);
+    }
+    return {distance:d,tree:p};
 }
 // #endregion BFS Algorithms
 
@@ -538,7 +569,9 @@ Graph.prototype.isSpanningTree = function(A)
 		if(!av.includes(v)) av.push(v);  
 	});
 
-	return V.every(v=>av.includes(v));
+    //return V.every(v=>av.includes(v));
+    // Since both V and AV are sets, we need only compare their size
+    return (V.length===av.length);
 };
 
 
