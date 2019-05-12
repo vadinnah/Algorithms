@@ -37,18 +37,18 @@ There are two ways to traverse a graph, **Breadth-First Search (BFS)** or **Dept
 
 ```
 BFS(G,s):
-  for each v ∈ v[G] -s          // Step 1 
-    d[v] <- ∞             
+  for each v ∈ v[G] -s          // Step 1: assign default values for distance, parent and
+    d[v] <- ∞                   //         traversal state for all v ∈ v[G], except s
     π[v] <- NIL
     color[v] <- WHITE
  
-  d[s] <- 0;                    // Step 2
+  d[s] <- 0;                    // Step 2: Assign the initial values for s
   π[s] <- NIL
   color[s] <- GRAY
  
-  Q.enqueue(s)                  // Step 3
-  while Q ≠ Ø 
-    u <- Q.dequeue()
+  Q.enqueue(s)                  // Step 3: As vertices are discovered, iterate
+  while Q ≠ Ø                   //         through their adjacency lists until
+    u <- Q.dequeue()            //         all vertices are explored.
     for each v ∈ AdjList(u)
       if color[v]=WHITE
         d[v] <- d[u]+1
