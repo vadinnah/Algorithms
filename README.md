@@ -26,3 +26,58 @@ A graph can be:
 * minimum spanning tree
 * Detecting cycles
 * topological sort
+
+### Traversing Graphs (the Algorithms)
+
+There are two ways to traverse a graph, **Breadth-First Search (BFS)** or **Depth-First Search (DFS)**. 
+
+**All graph traversal algorithms fall into one of the two methods.**
+
+#### Breadth-First Search (BFS)
+
+```
+BFS(G,s):
+  for each v ∈ v[G] -s          // Step 1: assign default values for distance, parent and
+    d[v] <- ∞                   //         traversal state for all v ∈ v[G], except s
+    π[v] <- NIL
+    color[v] <- WHITE
+ 
+  d[s] <- 0;                    // Step 2: Assign the initial values for s
+  π[s] <- NIL
+  color[s] <- GRAY
+ 
+  Q.enqueue(s)                  // Step 3: As vertices are discovered, iterate
+  while Q ≠ Ø                   //         through their adjacency lists until
+    u <- Q.dequeue()            //         all vertices are explored.
+    for each v ∈ AdjList(u)
+      if color[v]=WHITE
+        d[v] <- d[u]+1
+        π[v] <- u
+        color[v] <- GRAY
+        Q.enqueue(v)
+    color[u] <- BLACK
+``` 
+
+##### How BFS works:
+The basic notion of this algorithm is 
+> BFS discovers all vertices at distance `k` from starting vertex `s` before discovering vertices at distance `k+1` from `s` and so on. 
+
+During execution, BFS performs three things,
+1. records the distance from `s` for each vertex `v ∈ V[G]`
+2. records the parent of each vertex `v` in the path `s..v` (conincidentally, forming a BFS tree)
+3. tracks the traversl state of each vertex during execution. For simplicity, the algorithm usually uses colors: `WHITE`,`GRAY` and `BLACK`
+  * `WHITE` - vertex is undiscovered
+  * `GRAY` - vertex has been discovered, but not fully explored
+  * `BLACK` - vertex has been explored
+  
+With regards to BFS, a vertex is "explored" when each member of the vertex's adjacency list has been examined (i.e. discovered). 
+
+##### Properties of BFS:
+Given a starting vertex `s` in the set of vertices in a graph `V[G]`, BFS will find the shortest path `δ(s,v)` as the minimum number of edges in the path `(s..v)`
+> in other words, BFS can be used to find the single-source shortest path _if-and-only-if_ the graph is unweighted (hence, the only concern is the number of edges in the path)
+
+BFS composes a single tree of the graph (only 1 root).  
+
+
+
+#### Depth-First Search (DFS)
