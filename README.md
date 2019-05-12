@@ -26,3 +26,13 @@ A graph can be:
 * minimum spanning tree
 * Detecting cycles
 * topological sort
+
+### Traversing Graphs (the Algorithms)
+
+There are two ways to traverse a graph, **Breadth-First Search (BFS)** or **Depth-First Search (DFS)**. 
+
+**All graph traversal algorithms fall into one of the two methods.**
+
+#### Breadth-First Search (BFS)
+
+#### Depth-First Search (DFS)
