@@ -115,6 +115,16 @@ Graph.prototype.adjacencyMatrix = function() {
     return new AdjacencyMatrix(this.vertices,this.edges, this.isDirected);
 };
 
+/**
+ * @class VertexColor
+ * 
+ * WHITE = vertex is undiscovered
+ * GRAY = vertex has been discovered
+ * BLACK = vertex has been explored
+ * 
+ * In the case of BFS, "explored" means
+ * the vertex adjacency list has been examined
+ */
 Graph.prototype.vertexColor =  {
     WHITE:'white',
     GRAY:'gray',
@@ -205,37 +215,36 @@ Graph.prototype.bfs = function(s) {
     let color = {};
     let distance = {};
     let parent = {};
-    let queue = [];
+    let frontier = [];
     let al = me.adjacencyList();
     let V = me.vertices;
-    let vertexColor=me.vertexColor;
+    let {WHITE,GRAY,BLACK}=me.vertexColor;
 
     for(let u of V) {
         if(u!==s) {
-            color[u]=vertexColor.WHITE;
+            color[u]=WHITE;
             distance[u]=Infinity;
-            //parent[u]=null; 
             parent[u]=undefined; 
         }
     }
 
-    color[s]=vertexColor.GRAY;
+    color[s]=GRAY;
     distance[s]=0;
     parent[s]=null;
-    queue.push(s);
+    frontier.push(s);
     
-    while(queue.length>0)
+    while(frontier.length>0)
     {
-        let u = queue.shift();
+        let u = frontier.shift();
         for(let v of al[u]) {
-            if(color[v]===vertexColor.WHITE) {
-                color[v]=vertexColor.GRAY;
+            if(color[v]===WHITE) {
+                color[v]=GRAY;
                 distance[v]=distance[u]+1;
                 parent[v]=u;
-                queue.push(v);
+                frontier.push(v);
             }
         }
-        color[u]=vertexColor.BLACK;
+        color[u]=BLACK;
     }
     return {distance,parent};
 }
