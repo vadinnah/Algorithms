@@ -203,7 +203,7 @@ DFS-VISIT(u):
       if color[v]=GRAY                   // u was discovered while exploring v
         classify-edge([u,v], BACK)       // (i.e. v is ancestor to u) 
       if color[v]=BLACK                   
-        if d[u] < d[v]                   // 
+        if d[u] < d[v]                   //  
           classify-edge([u,v], FORWARD)
         else  
           classify-edge([u,v], CROSS)
