@@ -42,42 +42,42 @@ var {Graph} = require('./Graphs');
 // );
 //console.log(g.BellmanFord('s'));
 
-// var dag = new Graph(
-// 	['r','s','t','x','y','z']
-// 	,[
-// 		['r','s',5]
-// 		,['s','t',2]
-// 		,['t','x',7]
-// 		,['x','y',-1]
-// 		,['y','z',-2]
-// 		,['s','x',6]
-// 		,['x','z',1]
-// 		,['r','t',3]
-// 		,['t','y',4]
-// 		,['t','z',2]
-// 	]
-// 	,true
-// );
-// console.log(dag.DAG_SP('s'));
-
-// to test Dijkstra
-var dg = new Graph(
-	['s','t','x','y','z']
+var dag = new Graph(
+	['r','s','t','x','y','z']
 	,[
-		['s','t',10]
-		,['s','y',5]
-		,['t','y',2]
-		,['y','t',3]
-		,['z','s',7]
-		,['t','x',1]
-		,['x','z',4]
-		,['z','x',6]
-		,['y','z',2]
-		,['y','x',9]
+		['r','s',5]
+		,['s','t',2]
+		,['t','x',7]
+		,['x','y',-1]
+		,['y','z',-2]
+		,['s','x',6]
+		,['x','z',1]
+		,['r','t',3]
+		,['t','y',4]
+		,['t','z',2]
 	]
 	,true
 );
-console.log(dg.Dijkstra('s'));
+console.log(dag.DAG_SP('s'));
+
+// to test Dijkstra
+// var dg = new Graph(
+// 	['s','t','x','y','z']
+// 	,[
+// 		['s','t',10]
+// 		,['s','y',5]
+// 		,['t','y',2]
+// 		,['y','t',3]
+// 		,['z','s',7]
+// 		,['t','x',1]
+// 		,['x','z',4]
+// 		,['z','x',6]
+// 		,['y','z',2]
+// 		,['y','x',9]
+// 	]
+// 	,true
+// );
+// console.log(dg.Dijkstra('s'));
 
 // function bfs(al,s) {
 // 	let d = {}; //distance
@@ -102,4 +102,44 @@ console.log(dg.Dijkstra('s'));
 // 	return {d,p};
 // }
 
+// var tg = new Graph(
+// 	['a','b','c','d'],
+// 	[
+// 		['a','b']
+// 		,['a','d']
+// 		,['b','c']
+// 		,['b','d']
+// 		,['c','d']
+// 	]
+// 	,true
+// );
 
+// console.log(tg.topologicalSort())
+
+// var tg = new Graph(
+// 	[
+// 		'jacket'
+// 		,'tie'
+// 		,'belt'
+// 		,'shirt'
+// 		,'watch'
+// 		,'shoes'
+// 		,'pants'
+// 		,'undershorts'
+// 		,'socks'
+// 	],
+// 	[
+// 		['socks','shoes']
+// 		,['undershorts','shoes']
+// 		,['undershorts','pants']
+// 		,['pants','shoes']
+// 		,['pants','belt']
+// 		,['belt','jacket']
+// 		,['shirt','belt']
+// 		,['shirt','tie']
+// 		,['tie','jacket']
+// 	]
+// 	,true
+// );
+
+// console.log(tg.topologicalSort()) //-> expected result: socks,undershorts,pants,shoes,watch,shirt,belt,tie,jacket

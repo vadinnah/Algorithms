@@ -44,7 +44,7 @@ var AdjacencyList = function(nodes, edges, isDirected) {
                         this[i].push(v);
                     }
                 }
-				else if (!isDirected && v===n) {
+				else if (!isDirected && v===i) {
                     if(w) {
                         this[i].push([u,w]);
                     }
@@ -338,13 +338,13 @@ Graph.prototype.topologicalSort = function() {
     // define the recursed operations
     function dfs_visit(u) {
         color[u] = vc.GRAY;
-        for(let v of al[u]) {
+        for(let [v,w] of al[u]) {
             if (color[v]===vc.WHITE) {
                 dfs_visit(v);
             }                
         }
         color[u]=vc.BLACK;
-        result.push(u);
+        result.unshift(u);
     };
 
     // before graph exploration begins
