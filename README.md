@@ -139,7 +139,7 @@ During execution, DFS performs three things,
 
 ***Property:*** DFS provides information about the structure of the graph, which is elaborated in the subsequent properties
 
-***Property:*** The discovery and finish times are parenthetical operations. That means for any vertices u and v, exactly one of the following three conditions are true
+***Property:*** The discovery and finish times are parenthetical operations. (That is the whole idea of DFS: a node's children must be completely explored before exploration of the node can be completed.) That means for any vertices u and v, exactly one of the following three conditions are true
 * the intervals [d[u],f[u]] and [d[v],f[v]] are disjoint. Neither is a descendant of the other in the depth-first forest. (Put another way, neither was discovered when explopring the other)
 * Interval [d[u],f[u]] contains inteveral [d[v],f[v]], which means u is an ancestor of v. (Put another way, v was discovered while exploring u)
 * * Interval [d[v],f[v]] contains inteveral [d[u],f[u]], which means u is a descendant of v. (Put another way, u was discovered while exploring v)
@@ -149,13 +149,11 @@ During execution, DFS performs three things,
 ***Property:*** DFS computes forests 
 DFS computes a forest of the graph. A forest is a set of disjoint trees. Compare to BFS, which can only form a tree rooted at the starting vertex. 
 
-***Property:*** DFS can be modified to **classify edges**
+***Property:*** DFS can be modified to **classify edges**, which enables cycles detection.
 
-***Property:*** DFS can be modified to **detect cycles**
+***Property:*** DFS can be modified to perform a **topological sort** of a directed acyclic graph (DAG).
 
-***Property:*** DFS can be modified to perform a **topological sort** of a graph
-
-###### Edge Classification
+###### Edge Classification & Cycle Detection
 
 There are 4 types of edges in a graph:
 1. Tree edge: An edge that adds a new vertex to the tree.
@@ -168,6 +166,10 @@ There are 4 types of edges in a graph:
 
    ..._the depth of vertex v < depth of vertex u._
 4. Cross edge: Any edge not a leaf, forward or back edge.
+ 
+**A graph has a cycle if it has a back edge**
+
+**Important Note: In an Undirected Graph, forward edges and cross edges are not possible.**
 
 ***How to modify DFS to classify edges:*** Modify the recursive portion (DFS_VISIT) Use the traversal status (WHITE,GRAY,BLACK) and the discovery and finish times to determine an edges type. Using `d[n]` and `f[n]` to represent the discovery time and finish time of some vertex n, the edge (u,v)
 - is a leaf edge if it causes v to go from WHITE -> GRAY
@@ -201,10 +203,10 @@ DFS-VISIT(u):
       DFS-VISIT(v)
     else                                 // we've already explored v
       if color[v]=GRAY                   // u was discovered while exploring v
-        classify-edge([u,v], BACK)       // (i.e. v is ancestor to u) 
+        classify-edge([u,v], BACK)       // (i.e. v is ancestor of u) 
       if color[v]=BLACK                   
-        if d[u] < d[v]                   //  
-          classify-edge([u,v], FORWARD)
+        if d[u] < d[v]                     
+          classify-edge([u,v], FORWARD)  // v is descendant of u
         else  
           classify-edge([u,v], CROSS)
   color[u] <- BLACK
@@ -213,7 +215,18 @@ DFS-VISIT(u):
 ---
 ```
 
-**Important Note: In an Undirected Graph, forward edges and cross edges are not possible.**
 
-###### Cycle Detection
+
 ###### Topological Sort
+
+> A **topological sort** of a dag `G = (V,E)` is a linear ordering of all vertices such that if G contains edge `(u,v)`, then `u` appears before `v` in the ordering. (If the graph is not acyclic, then no linear ordering is possible.)
+
+Another way to think about topological sorting, is to view it as ordering the vertices olong a horizontal line so that all directed edges go from left to right.
+
+To compute the topological sort of a DAG using DFS, order the vertices in descending order of their finish time.
+
+# References
+
+[MIT Open Courseware: Introduction to Algorithms](https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/)
+
+Introduction to Algorithms, Ed. 2, Thomas H. Cormen, Charles E. Leiserson,... - [Amazon](https://www.amazon.com/Introduction-Algorithms-Second-Thomas-Cormen/dp/0262032937)
