@@ -139,7 +139,12 @@ During execution, DFS performs three things,
 
 ***Property:*** DFS provides information about the structure of the graph, which is elaborated in the subsequent properties
 
-***Property:*** The discovery and finish times are parenthetical operations. That means for any vertices u and v, if v was discovered after u (d[u]<d[v]) then v will finish before u (f[u]>f[v]) or simply put `{d[u]...{d[v]...{...}...f[v]}...f[u]}`. This plays a role in classifying edges.
+***Property:*** The discovery and finish times are parenthetical operations. That means for any vertices u and v, exactly one of the following three conditions are true
+* the intervals [d[u],f[u]] and [d[v],f[v]] are disjoint. Neither is a descendant of the other in the depth-first forest. (Put another way, neither was discovered when explopring the other)
+* Interval [d[u],f[u]] contains inteveral [d[v],f[v]], which means u is an ancestor of v. (Put another way, v was discovered while exploring u)
+* * Interval [d[v],f[v]] contains inteveral [d[u],f[u]], which means u is a descendant of v. (Put another way, u was discovered while exploring v)
+
+> Mnemonic protip: think _a contains b_ == _a is ancestor of b_)
 
 ***Property:*** DFS computes forests 
 DFS computes a forest of the graph. A forest is a set of disjoint trees. Compare to BFS, which can only form a tree rooted at the starting vertex. 
@@ -153,7 +158,7 @@ DFS computes a forest of the graph. A forest is a set of disjoint trees. Compare
 ###### Edge Classification
 
 There are 4 types of edges in a graph:
-1. Leaf edge: An edge that adds a new vertex to the tree.
+1. Tree edge: An edge that adds a new vertex to the tree.
 
    ..._Vertex v of the edge (u,v) was previously undiscovered._
 2. Forward edge: An edge (u,v) that leads to an descendant in the tree
@@ -164,9 +169,9 @@ There are 4 types of edges in a graph:
    ..._the depth of vertex v < depth of vertex u._
 4. Cross edge: Any edge not a leaf, forward or back edge.
 
-***How to modify DFS to classify edges:*** Use the traversal status (WHITE,GRAY,BLACK) and the discovery and finish times to determine an edges type. Using `d[n]` and `f[n]` to represent the discovery time and finish time of some vertex n, the edge (u,v)
+***How to modify DFS to classify edges:*** Modify the recursive portion (DFS_VISIT) Use the traversal status (WHITE,GRAY,BLACK) and the discovery and finish times to determine an edges type. Using `d[n]` and `f[n]` to represent the discovery time and finish time of some vertex n, the edge (u,v)
 - is a leaf edge if it causes v to go from WHITE -> GRAY
-- is a back edge if d[v]<d[u]
+- is a back edge if d[v]<d[u] and v is an ancestor of u.
 - is forward edge if f[u]>f[v]
 - is cross edge if 
 
@@ -192,10 +197,16 @@ DFS-VISIT(u):
   for each v ∈ AdjList(u)
     if color[v]=WHITE
       π[v] <- u
-      type(u,v) = leaf
+      classify-edge([u,v], TREE)
       DFS-VISIT(v)
-    else                    // we've already explored v
-      if(
+    else                                 // we've already explored v
+      if color[v]=GRAY                   // u was discovered while exploring v
+        classify-edge([u,v], BACK)       // (i.e. v is ancestor to u) 
+      if color[v]=BLACK                   
+        if d[u] < d[v]                   // 
+          classify-edge([u,v], FORWARD)
+        else  
+          classify-edge([u,v], CROSS)
   color[u] <- BLACK
   time <- time + 1
   f[u] <- time
