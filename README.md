@@ -109,7 +109,7 @@ DFS(G):
 DFS-VISIT(u):
   color[u]=GRAY
   time <- time + 1
-  d[v] <- time
+  d[u] <- time
 
   for each v ∈ AdjList(u)
     if color[v]=WHITE
@@ -117,7 +117,7 @@ DFS-VISIT(u):
       DFS-VISIT(v)
   color[u] <- BLACK
   time <- time + 1
-  f[v] <- time
+  f[u] <- time
 ---
 ```
 
@@ -137,7 +137,11 @@ During execution, DFS performs three things,
 
 ##### Properties of DFS:
 
-***Property:*** DFS computers forests 
+***Property:*** DFS provides information about the structure of the graph, which is elaborated in the subsequent properties
+
+***Property:*** The discovery and finish times are parenthetical operations. That means for any vertices u and v, if v was discovered after u (d[u]<d[v]) then v will finish before u (f[u]>f[v]) or simply put `{d[u]...{d[v]...{...}...f[v]}...f[u]}`. This plays a role in classifying edges.
+
+***Property:*** DFS computes forests 
 DFS computes a forest of the graph. A forest is a set of disjoint trees. Compare to BFS, which can only form a tree rooted at the starting vertex. 
 
 ***Property:*** DFS can be modified to **classify edges**
@@ -159,6 +163,44 @@ There are 4 types of edges in a graph:
 
    ..._the depth of vertex v < depth of vertex u._
 4. Cross edge: Any edge not a leaf, forward or back edge.
+
+***How to modify DFS to classify edges:*** Use the traversal status (WHITE,GRAY,BLACK) and the discovery and finish times to determine an edges type. Using `d[n]` and `f[n]` to represent the discovery time and finish time of some vertex n, the edge (u,v)
+- is a leaf edge if it causes v to go from WHITE -> GRAY
+- is a back edge if d[v]<d[u]
+- is forward edge if f[u]>f[v]
+- is cross edge if 
+
+```
+DFS(G):
+  for each v ∈ V[G]                
+    d[v] <- ∞                   
+    f[v] <- ∞                   
+    π[v] <- NIL
+    color[v] <- WHITE
+ 
+  time <- 0                    
+  
+  for each u ∈ V[G]            
+    DFS-VISIT(u) 
+---
+
+DFS-VISIT(u):
+  color[u]=GRAY
+  time <- time + 1
+  d[u] <- time
+  
+  for each v ∈ AdjList(u)
+    if color[v]=WHITE
+      π[v] <- u
+      type(u,v) = leaf
+      DFS-VISIT(v)
+    else                    // we've already explored v
+      if(
+  color[u] <- BLACK
+  time <- time + 1
+  f[u] <- time
+---
+```
 
 **Important Note: In an Undirected Graph, forward edges and cross edges are not possible.**
 
