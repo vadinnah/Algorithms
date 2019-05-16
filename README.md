@@ -173,8 +173,8 @@ There are 4 types of edges in a graph:
 
 ***How to modify DFS to classify edges:*** Modify the recursive portion (DFS_VISIT) Use the traversal status (WHITE,GRAY,BLACK) and the discovery and finish times to determine an edges type. Using `d[n]` and `f[n]` to represent the discovery time and finish time of some vertex n, the edge (u,v)
 - is a leaf edge if it causes v to go from WHITE -> GRAY
-- is a back edge if d[v]<d[u] and v is an ancestor of u.
-- is forward edge if f[u]>f[v]
+- is a back edge if `d[v]<d[u]` and v is an ancestor of u.
+- is forward edge if `f[u]>f[v]`
 - is cross edge if 
 
 ```
@@ -227,19 +227,28 @@ To compute the topological sort of a DAG using DFS, order the vertices in descen
 
 ### Section Summary
 
-BFS can be applied 
-- to unweighted graphs to find the shortest path for unweighted graph.
+In summary, for the following types of problems this section teaches
+1. how to identify them
+1. how to model them using a graph
+1. the algrothim to solves them.
 
-DFS can be applied
-- to weighted directed graphs to find the minimum-spanning tree
-- to any directed graph type to find the topological sort
-- to any directed graph type to find the strongly connected components
-- to any directed graph type to detect the presence of a cycle.
+Those problems are:
+- iterating (exploring) a graph
+- minimum spanning tree
+- strongly connected components
+- topological sort
+- shortest-paths
 
-Three alogrithms can be used to find the shorted path of a graph depending on the graph type:
-- Dijkstra can be used on nonnegative weighted directed graphs
-- DAG_SP can be used on DAGs
-- Bellman-Ford can be used on negative and nonnegative weighted directed graphs
+The algorithms learned:
+- BFS  
+- DFS for minimum-spanning tree
+- DFS for topological sort
+- DFS for strongly connected components
+- DFS for edge classification
+- DFS for cycle detection
+- Dijkstra for shortest path
+- DAG_SP for shortest path
+- Bellman-Ford for shortest path
 
 # References
 
