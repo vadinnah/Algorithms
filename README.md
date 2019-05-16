@@ -225,8 +225,26 @@ Another way to think about topological sorting, is to view it as ordering the ve
 
 To compute the topological sort of a DAG using DFS, order the vertices in descending order of their finish time.
 
+### Section Summary
+
+BFS can be applied 
+- to unweighted graphs to find the shortest path for unweighted graph.
+
+DFS can be applied
+- to weighted directed graphs to find the minimum-spanning tree
+- to any directed graph type to find the topological sort
+- to any directed graph type to find the strongly connected components
+- to any directed graph type to detect the presence of a cycle.
+
+Three alogrithms can be used to find the shorted path of a graph depending on the graph type:
+- Dijkstra can be used on nonnegative weighted directed graphs
+- DAG_SP can be used on DAGs
+- Bellman-Ford can be used on negative and nonnegative weighted directed graphs
+
 # References
 
 [MIT Open Courseware: Introduction to Algorithms](https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/)
 
 Introduction to Algorithms, Ed. 2, Thomas H. Cormen, Charles E. Leiserson,... - [Amazon](https://www.amazon.com/Introduction-Algorithms-Second-Thomas-Cormen/dp/0262032937)
+
+[On Linear Programming](https://www.math.ucla.edu/~tom/LP.pdf)
