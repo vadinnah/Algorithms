@@ -761,14 +761,14 @@ Graph.prototype.BellmanFord = function(s) {
 
     // for each edge (u,v) ∈ E[G]
     //   if d[v] > d[u] + w(u,v)
-    //     return FALSE
-    // return TRUE
+    //     return FALSE - shortest path is not well-defined
+    // return shortest path 
     for(let [u,v,w] of E) {
         if(d[v] > d[u] + w) {
             return false;
         }
     }
-    return true;
+    return {shortestPaths:d,pathmap:p};
 }
 
 /**
