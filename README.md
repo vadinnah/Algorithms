@@ -225,6 +225,99 @@ Another way to think about topological sorting, is to view it as ordering the ve
 
 To compute the topological sort of a DAG using DFS, order the vertices in descending order of their finish time.
 
+#### Single Source Shortest Path
+
+Shortest-path problems consist of a weighted graph. Each weight can be interpreted as distance, time,cost,penalties or any other quantity that accumulates linearly along a path and that one wishes to minimize.
+
+**Negative weights and shortest path**
+If a graph `G = (V,E)` has negative weights,
+* The shortest-path weight `𝛿(s,v)` remains well-defined for all `v ∈ V` if _there are no negative weight cycles reachable from source vertex_ `s`.
+* Else, if there exists a negative weight cycle reachable from `s`, then `𝛿(s,v)` is not well defined --> `𝛿(s,v) = -∞` 
+
+A shortest path cannot contain a cycle positive or negative.
+
+The three shortest-path algoriothms under study—Dijkstra,Bellman-Ford, and SP_DAG— rely on the **optimal substructure** property and a technique called **relaxation**:
+
+  > **Optimal substructure** property: subpaths of shortest paths are shortest paths.
+
+  > **Relaxation** method: The prcoess of relaxing an edge `(u,v)` consists of improving (i.e. minimizing) the shortest-path from `u` to `v` as we DFS explore `u`, updating the `𝛿(u,v)` and `v`'s parent on the new path.
+
+##### Properties of Shortest-Paths and Relaxation
+
+|||
+| ------------- | ------------- |
+|**Triangle Property**:| For any edge `(u,v)`, `𝛿(u,v) ≤ 𝛿(s,u) + w(u,v)`.| 
+|**Upper-Bound Property**:|`d[v] ≥ 𝛿(s,v)` for all `v ∈ V` as...|
+|**No-Path Property**:|if no path exists from `s` to `v` then `d[v] = 𝛿(s,v) = ∞`.|
+|**Convergence Property**:|If `s->...->u->v = 𝛿(s,v)` once then `d[u] = 𝛿(s,u)` then `d[v] = 𝛿(s,v)`.|
+|**Predecessor Property**:|Once `d[v] = 𝛿(s,v)` for all `v ∈ V`, the predecessor subgraph is a shortest-pathstree rooted at `s`.|
+|**Path-Relaxation Property**:||
+
+##### The Algortihms
+
+First, all of the algorithms use two helper methods:
+
+```
+INITIALIZE-SINGLE-SOURCE(G,s)
+{
+    for each vertex v ∈ V[G]
+      do d[v] <- ∞
+        π[v] <- NIL
+    d[s] <- 0
+}
+```
+
+```
+RELAX(u,v,w)
+{
+    if d[v] > d[u] + w 
+      then d[v] <- d[u] + w;
+        π[v] <- u
+}
+```
+
+###### Dijkstra Shortest Path
+```
+DIJKSTRA(G,w,s)
+{
+    INITIALIZE-SINGLE-SOURCE(G,s)
+    S <- Ø
+    Q <- V[G]
+    while Q != Ø
+      do u <- EXTRACT-MIN(Q)
+        S <- S ∪ {u}
+        for each v ∈ Adj[u]
+          do RELAX(u,v,w)
+}
+```
+
+###### DAG Shortest Path
+```
+DAG-SHORTEST-PATHS(G,w,s)
+{
+    ts <- TOPOLOGICAL-SORT(G)
+    INITIALIZE-SINGLE-SOURCE(G,s)
+    for u ∈ ts
+      for each v ∈ Adj[u]
+        do RELAX(u,v,w) 
+}
+```
+
+###### Bellman-Ford
+```
+BELLMAN-FORD(G,w,s)
+{
+    INITIALIZE-SINGLE-SOURCE(G,s)
+    for i <- 1 to |V|G||-1
+      for each edge (u,v) ∈ E[G]
+        do RELAX(u,v,w)
+    for each edge (u,v) ∈ E[G]
+      if d[v] > d[u] + w(u,v)
+        return FALSE
+    return TRUE
+}
+```
+
 ### Section Summary
 
 In summary, for the following types of problems this section teaches
@@ -240,7 +333,7 @@ Those problems are:
 - shortest-paths
 
 The algorithms learned:
-- BFS  
+- BFS to find the shortest path when edge count is the determinant 
 - DFS for minimum-spanning tree
 - DFS for topological sort
 - DFS for strongly connected components
