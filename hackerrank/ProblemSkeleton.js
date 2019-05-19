@@ -1,7 +1,6 @@
 'use strict';
 
 const fs = require('fs');
-const DisjointSet = require('./../../../dataStructures/DisjointSet');
 
 var inputString = '';
 var currentLine = 0;
@@ -20,9 +19,15 @@ function ReadTest(filepath)
 
 function main() {
     const ws = process.stdout;
-    let filepath = 'E:\\CodeSpace\\Algorithms\\hackerrank\\GraphTheory\\RoadsAndLibraries\\LibsAndRoads3.txt';
-
+    let errmsg = "Please provide the name of a test file";
+    if(process.argv.length < 3) {
+        throw errmsg;
+    } 
+    
+    let filepath = `${__dirname}\\${process.argv[2]}`;    
     ReadTest(filepath);
+
+    //Place test code here
 
     ws.end();
 }
