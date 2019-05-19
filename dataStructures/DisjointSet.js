@@ -1,4 +1,8 @@
 
+/**
+ * Special thanks to https://www.mathblog.dk/disjoint-set-data-structure/
+ * @param {*} V 
+ */
 var DisjointSet = function(V) {
     this.Parent = {};
     this.Rank = {};
