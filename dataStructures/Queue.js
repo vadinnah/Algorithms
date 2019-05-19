@@ -19,10 +19,3 @@ Queue.prototype.dequeue = function() {
     }
     return res;
 };
-
-var q = new Queue();
-
-q.enqueue(1);
-q.enqueue(2);
-q.enqueue(3);
-q.enqueueRange([4,5,6]);
