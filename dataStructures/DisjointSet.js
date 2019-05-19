@@ -56,4 +56,34 @@ DisjointSet.prototype.Union = function(u,v) {
     }
 }
 
+DisjointSet.prototype.GetSetMemberCount = function() {
+    let sets = {};
+    for (let i of this.list) {
+        let c = this.find(i);
+        if (sets[c] === undefined) sets[c] = 1;
+        else sets[c]++;
+    }
+
+    let dsets = [];
+    for (let s in sets) {
+        dsets.push(sets[s]);
+    }
+    return dsets;
+}
+
+DisjointSet.prototype.GetSetList = function() {
+    let sets = {};
+    for (let i of this.list) {
+        let c = this.find(i);
+        if (sets[c] === undefined) sets[c] = [i];
+        else sets[c].push(i);
+    }
+
+    let dsets = [];
+    for (let s in sets) {
+        dsets.push(sets[s]);
+    }
+    return dsets;
+}
+
 module.exports = DisjointSet;
