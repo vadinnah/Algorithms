@@ -17,6 +17,7 @@ Heap.prototype.Insert = function(x) {
 			p = Math.floor((i-1)/2);
 		}
 	}
+	console.log(this.list);
 };
 
 Heap.prototype.parent = function(i) { return Math.floor((i-1)/2);}
@@ -25,23 +26,43 @@ Heap.prototype.right = function(i) { return 2*i+2;}
 
 Heap.prototype.Delete = function() {};
 
-Heap.prototype.ExtractMin() = function() {
+Heap.prototype.ExtractMin = function() {
+	let i = 0;
+	//function p(){return Math.floor((i-1)/2);}
+	function l(){return 2*i+1;}
+	function r(){return 2*i+2;}
+	function m() {
+		if(l<L.length && r<L.length) return (L[l]<L[r]) ? l : r;
+		else if(r>L.length) return l ;
+		else if(l>L.length) return r;
+		else return Infinity;
+		
+	}
 	let L = this.list;
 	let min = L.shift();
-	for(let i = 0; i < L.length; )
-	{
-		let li = 2*i+1;
-		let ri = 2*i+2;
-		let mi = (L[li]<L[ri]) ? li : ri;
-		if(L[mi]<L[i]) {
-			[L[mi],L[i]] = [L[i],L[mi]];
-			i=mi;
+	while(i < L.length)
+	{ 
+		if(L[m]<L[i]) {
+			[L[m],L[i]] = [L[i],L[m]];
+			i=m;
 		} else {
 			i = Infinity;
 		}
 	}
+	console.log([min, this.list]);
+	return min;
 };
 
-Heap.prototype.DecreaseKey(k) = function() {
+Heap.prototype.DecreaseKey = function(k) {
 
 };
+
+var h = new Heap();
+for(let n of [2,4,14,33,7,5,6,9,1,100,17]) {
+	h.Insert(n);
+}
+console.log('--Extracting--');
+h.ExtractMin();
+h.ExtractMin();
+h.ExtractMin();
+h.ExtractMin();
