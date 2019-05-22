@@ -917,6 +917,37 @@ Graph.prototype.Dijkstra = function(s) {
 }
 // #endregion Shorted Path Algorithms
 
+/*#####################################################*\
+    All-pairs Shortest Path Algorithms
+\*#####################################################*/
+// #region All-pairs Shorted Path Algorithms
+
+/**
+ * EXTEND-SHORTEST-PATHS(L,W)
+ * {
+ *   n <- rows[L]
+ *   let L` = l'(i,j) be an n*n matrix
+ *   for i <- 1 to n
+ *      do for j <- 1 to n
+ *          do l` <- ∞
+ *              for k <- 1 to n
+ *                  do l` <- min(l'(i,j), l(i,k) + w(k,j) )
+ *   return L`
+ * }
+ * 
+ * * W represents the adjacency Matrix
+ * * L(n) represents the shortest-path matrix 
+ *   for a path that contains n edges, so that
+ *   l(i,j) is a slot in L(n) that contains the
+ *   weight of the δ(i,j) containing m-1 edges
+ * * l`(i,j) is a slot in L' that contains the
+ *   weight of the δ(i,j) containing m edges
+ */
+Graph.prototype.extendShortestPaths = function(L,W)
+{
+
+}
+// #endregion All-pairs Shorted Path Algorithms
 
 module.exports = {
     AdjacencyList,
