@@ -27,7 +27,6 @@ Heap.prototype.Insert = function(x) {
 			p = Math.floor((i-1)/2);
 		}
 	}
-	console.log(this.list);
 };
 
 Heap.prototype.Delete = function(k) 
@@ -86,11 +85,15 @@ Heap.prototype.ExtractMin = function() {
 };
 
 Heap.prototype.ChangeKey = function(k,val) {
-	let i = this.list.findIndex(k);
+	let i = this.list.indexOf(k);
 	if(i<0) {
 		throw 'Heap.DecreaseKey(): Value not found.'
-	}
-	this.list[i] = val;
+	} 
+	if(k===undefined || val===undefined)
+		throw 'Heap.DecreaseKey(): Both the key and new value must be specified.'
+
+	let L = this.list;
+	L[i] = val;
 	function p(){return Math.floor((i-1)/2);}
 
 	if(L.length>1) {
@@ -101,10 +104,10 @@ Heap.prototype.ChangeKey = function(k,val) {
 		}
 	}
 	
-	this.list.shift();
+	L.shift();
 };
 
-Heap.prototype.inorder()
+Heap.prototype.inorder = function()
 {
 	function p(){return Math.floor((i-1)/2);}
 	function l(){return 2*i+1;}
@@ -121,11 +124,14 @@ Heap.prototype.inorder()
 }
 
 var h = new Heap();
-for(let n of [2,4,14,33,7,5,6,9,1,100,17]) {
+for(let n of [2,4,17,33,7,5,6,9,1,100,14]) {
 	h.Insert(n);
 }
-console.log('--Extracting--');
-h.ExtractMin();
-h.ExtractMin();
-h.ExtractMin();
-h.ExtractMin();
+//console.log('--Extracting--');
+// h.ExtractMin();
+// h.ExtractMin();
+// h.ExtractMin();
+// h.ExtractMin();
+console.log(h.inorder());
+h.ChangeKey(7,3);
+console.log(h.inorder());
