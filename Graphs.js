@@ -1,9 +1,9 @@
 'use strict';
 
 /*#####################################################*\
-    Helper Classes
+    Graph and Helper classes
 \*#####################################################*/
-// #region Helper classes
+// #region Graph and Helper classes
 var AdjacencyList = function(nodes, edges, isDirected) {
 	if (nodes instanceof Array) {
 		for(let n of nodes) {
@@ -85,7 +85,7 @@ var AdjacencyMatrix = function(nodes, edges, isDirected) {
 		if (!isDirected) this[v][u] = (w) ? w : 1; 
 	}
 }
-// #endregion Helper classes
+
 
 var Graph = function(V,E,isDirected=false) {
 	var me = this;
@@ -139,6 +139,7 @@ Graph.prototype.EdgeClassifications = function()
     this.forward = [];
     this.cross = [];
 }
+// #endregion Graph and Helper classes
 
 
 /*#####################################################*\
@@ -493,6 +494,7 @@ Graph.prototype.computeSCC = function() {
     return res;
 };
 // #endregion DFS Algortihms
+
 
 /*#####################################################*\
     Algorithms to find the minimum spanning tree
@@ -917,10 +919,12 @@ Graph.prototype.Dijkstra = function(s) {
 }
 // #endregion Shorted Path Algorithms
 
+
 /*#####################################################*\
     All-pairs Shortest Path Algorithms
 \*#####################################################*/
 // #region All-pairs Shorted Path Algorithms
+
 
 /**
  * EXTEND-SHORTEST-PATHS(L,W)
